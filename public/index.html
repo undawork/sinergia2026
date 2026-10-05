@@ -3,38 +3,286 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#090909">
+  <meta name="theme-color" content="#f4f3ef">
+  <meta name="description" content="SINERGIA 2026 · Photo Team Command Center">
   <title>SINERGIA 2026 · Photo Team</title>
-  <style>
-    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f5f5f5;background:#090909}
-    *{box-sizing:border-box}body{margin:0;background:#090909;color:#f5f5f5}.shell{max-width:1120px;margin:0 auto;padding:32px 20px 48px}
-    .hero{min-height:52vh;display:flex;flex-direction:column;justify-content:flex-end;border-bottom:1px solid #2b2b2b;padding:48px 0 32px}
-    .eyebrow{font-size:12px;letter-spacing:.18em;color:#969696;margin-bottom:24px}.hero h1{font-size:clamp(64px,15vw,170px);line-height:.76;letter-spacing:-.075em;margin:0;font-weight:900}
-    .hero h1 span{color:#6f6f6f}.lead{font-size:clamp(20px,3vw,32px);margin:28px 0 20px;color:#c7c7c7}.status{display:flex;gap:10px;align-items:center;font-size:13px;color:#9e9e9e}
-    .dot{width:8px;height:8px;border-radius:50%;background:#e9e9e9;box-shadow:0 0 18px #fff}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding-top:16px}
-    .card{min-height:190px;border:1px solid #252525;border-radius:16px;padding:18px;background:#111;display:flex;flex-direction:column}.card small{color:#6f6f6f;font-size:11px}
-    .card h2{margin:auto 0 8px;font-size:22px;letter-spacing:-.03em}.card p{margin:0;color:#8f8f8f;font-size:14px;line-height:1.45}footer{padding:42px 0 8px;color:#666;font-size:12px}
-    @media(max-width:720px){.shell{padding:20px 14px 36px}.hero{min-height:45vh;padding-bottom:24px}.grid{grid-template-columns:1fr 1fr}.card{min-height:150px;padding:15px}.card h2{font-size:18px}}
-    @media(max-width:430px){.grid{grid-template-columns:1fr}.card{min-height:130px}}
-  </style>
+  <link rel="stylesheet" href="/styles.css">
 </head>
-<body>
-  <main class="shell">
-    <section class="hero">
-      <div class="eyebrow">TOMA TU LUGAR · CONFERENCIA</div>
-      <h1>SINERGIA<br><span>2026</span></h1>
-      <p class="lead">Photo Team Command Center</p>
-      <div class="status"><span class="dot"></span><span>Base operativa conectada</span></div>
-    </section>
-    <section class="grid">
-      <article class="card"><small>01</small><h2>HOY</h2><p>Bloques, prioridades y cobertura activa.</p></article>
-      <article class="card"><small>02</small><h2>SCHEDULE</h2><p>Run of show y próximos momentos.</p></article>
-      <article class="card"><small>03</small><h2>COVERAGE</h2><p>Asignaciones por fotógrafo y zona.</p></article>
-      <article class="card"><small>04</small><h2>SHOT LIST</h2><p>Tomas obligatorias y oportunidades.</p></article>
-      <article class="card"><small>05</small><h2>TEAM</h2><p>Roles, responsables y coordinación.</p></article>
-      <article class="card"><small>06</small><h2>UPLOADS</h2><p>RAW, selects, edición y entregas.</p></article>
-    </section>
-    <footer>Sinergia 2026 · Equipo de Fotografía</footer>
-  </main>
+<body data-day="1">
+  <div class="site-shell">
+    <header class="topbar">
+      <a class="brand-lockup" href="#" data-go="home" aria-label="Ir al inicio">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="brand-word">SINERGIA</span>
+        <span class="brand-sub">Photo Team · 2026</span>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Navegación principal">
+        <button class="nav-link is-active" data-view="home">Inicio</button>
+        <button class="nav-link" data-view="agenda">Agenda</button>
+        <button class="nav-link" data-view="coverage">Cobertura</button>
+        <button class="nav-link" data-view="resources">Recursos</button>
+        <button class="nav-link" data-view="team">Equipo</button>
+      </nav>
+
+      <div class="header-status"><i></i><span>Template operativo</span></div>
+    </header>
+
+    <main>
+      <section class="view is-active" id="home">
+        <div class="hero">
+          <div class="hero-copy">
+            <div class="kicker">Conferencia TOMATULUGAR · Argentina · 08—10 OCT 2026</div>
+            <h1>SINER<em>GIA</em></h1>
+            <div class="hero-bottom">
+              <p class="hero-intro">Centro operativo del equipo de fotografía. Agenda, cobertura, shot list, equipo y recursos en un solo lugar.</p>
+              <div class="countdown">
+                <strong id="countdownValue">—</strong>
+                <span id="countdownLabel">Para el inicio</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-art" aria-hidden="true">
+            <div class="gradient-field"></div>
+            <div class="orbit one"></div>
+            <div class="orbit two"></div>
+            <span class="art-caption">Distinción · Encuentro · Integración</span>
+          </div>
+        </div>
+
+        <div class="quick-grid">
+          <article class="panel now-panel">
+            <span class="panel-label">Próximo hito</span>
+            <div>
+              <h2 class="now-title">Inicio de<br>acreditaciones</h2>
+              <div class="now-meta">
+                <span class="pill"><i></i> Jueves 8 · 13:00</span>
+                <span class="pill">Cobertura · por asignar</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel quick-card" data-go="agenda">
+            <span class="panel-label">Agenda</span>
+            <div class="number">03</div>
+            <div>
+              <h3>Tres jornadas</h3>
+              <p>Cronograma operativo con cambio de atmósfera por día.</p>
+            </div>
+          </article>
+
+          <article class="panel quick-card" data-go="coverage">
+            <span class="panel-label">Cobertura</span>
+            <div class="number">—</div>
+            <div>
+              <h3>Asignaciones</h3>
+              <p>Responsables, zonas y objetivos. El equipo se completa después.</p>
+            </div>
+          </article>
+        </div>
+
+        <section class="brand-note">
+          <div class="brand-note-copy">
+            <span class="panel-label" style="color:rgba(255,255,255,.55)">Dirección visual</span>
+            <h3>Partes distintas.<br>Un mismo propósito.</h3>
+            <p>La interfaz toma el principio central de SINERGIA: módulos que se encuentran, capas, intersecciones, gradientes y una evolución cromática por jornada.</p>
+          </div>
+          <div class="brand-pattern" aria-hidden="true"></div>
+        </section>
+      </section>
+
+      <section class="view" id="agenda">
+        <header class="section-head">
+          <div>
+            <span class="eyebrow">Run of show</span>
+            <h2>Agenda</h2>
+          </div>
+          <p>Base construida desde el cronograma oficial. Las asignaciones fotográficas todavía quedan como placeholders hasta definir el equipo y la cobertura.</p>
+        </header>
+
+        <div class="day-switcher" aria-label="Seleccionar jornada">
+          <button class="day-btn is-active" data-day="1">Jueves 8 <small>Distinción</small></button>
+          <button class="day-btn" data-day="2">Viernes 9 <small>Encuentro</small></button>
+          <button class="day-btn" data-day="3">Sábado 10 <small>Integración</small></button>
+        </div>
+
+        <div class="schedule-layout">
+          <aside class="day-overview">
+            <div class="day-number" id="dayNumber">01</div>
+            <div>
+              <div class="day-name" id="dayName">Jueves 8</div>
+              <div class="day-concept" id="dayConcept">Distinción</div>
+            </div>
+            <div class="day-palette" id="dayPalette"></div>
+          </aside>
+          <div class="timeline" id="timeline"></div>
+        </div>
+      </section>
+
+      <section class="view" id="coverage">
+        <header class="section-head">
+          <div>
+            <span class="eyebrow">Photo operations</span>
+            <h2>Cobertura</h2>
+          </div>
+          <p>Primera estructura para distribuir al equipo. Los nombres y responsabilidades finales se completarán cuando estén confirmados.</p>
+        </header>
+
+        <div class="coverage-grid">
+          <article class="coverage-card placeholder">
+            <span class="status-dot">Zona principal</span>
+            <h3>Auditorio</h3>
+            <p>Escenario, speakers, adoración, ministración y planos generales.</p>
+            <div class="assignee">Responsable<strong>Por asignar</strong></div>
+          </article>
+          <article class="coverage-card placeholder">
+            <span class="status-dot">Comunidad</span>
+            <h3>Experiencia</h3>
+            <p>Acreditaciones, Espacio TTL, gastronomía, encuentros y reacciones.</p>
+            <div class="assignee">Responsable<strong>Por asignar</strong></div>
+          </article>
+          <article class="coverage-card placeholder">
+            <span class="status-dot">Narrativa</span>
+            <h3>Detalles + backstage</h3>
+            <p>Branding, objetos, momentos previos, equipo y transiciones entre bloques.</p>
+            <div class="assignee">Responsable<strong>Por asignar</strong></div>
+          </article>
+        </div>
+
+        <header class="section-head">
+          <div>
+            <span class="eyebrow">Base visual · provisional</span>
+            <h2>Shot list</h2>
+          </div>
+          <p>Una guía inicial alineada a la dirección de arte. Después la convertimos en un listado definitivo por bloque y por fotógrafo.</p>
+        </header>
+
+        <div class="shot-grid">
+          <article class="shot-card">
+            <div class="shot-index">01</div>
+            <h3>Encuentro humano</h3>
+            <p>Gestos, conexión, comunidad, colaboración y momentos de participación real.</p>
+            <div class="shot-tags"><span>reacciones</span><span>encuentros</span><span>comunidad</span></div>
+          </article>
+          <article class="shot-card">
+            <div class="shot-index">02</div>
+            <h3>Atmósfera</h3>
+            <p>Luz, capas, siluetas, movimiento y relación entre personas y escenario.</p>
+            <div class="shot-tags"><span>luz difusa</span><span>movimiento</span><span>escala</span></div>
+          </article>
+          <article class="shot-card">
+            <div class="shot-index">03</div>
+            <h3>Identidad</h3>
+            <p>Marca SINERGIA, módulos gráficos, pantallas, texturas y detalles que sitúan la conferencia.</p>
+            <div class="shot-tags"><span>branding</span><span>detalles</span><span>contexto</span></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="resources">
+        <header class="section-head">
+          <div>
+            <span class="eyebrow">TTL / SINERGIA2026</span>
+            <h2>Recursos</h2>
+          </div>
+          <p>Estos accesos quedarán conectados a Drive. Por ahora funcionan como placeholders del sistema que vamos a alimentar después.</p>
+        </header>
+
+        <div class="resource-grid">
+          <article class="resource-card placeholder">
+            <div class="resource-icon">P</div>
+            <h3>Presets</h3>
+            <p>Preset oficial y referencias de tratamiento fotográfico.</p>
+            <div class="resource-link">Link de Drive pendiente</div>
+          </article>
+          <article class="resource-card placeholder">
+            <div class="resource-icon">S</div>
+            <h3>Publishing Sheet</h3>
+            <p>Cronograma de publicaciones y necesidades de contenido.</p>
+            <div class="resource-link">Google Sheet pendiente</div>
+          </article>
+          <article class="resource-card placeholder">
+            <div class="resource-icon">B</div>
+            <h3>Brandbook</h3>
+            <p>Identidad, tipografías, paletas y universo visual de SINERGIA 2026.</p>
+            <div class="resource-link">Link de Drive pendiente</div>
+          </article>
+          <article class="resource-card placeholder">
+            <div class="resource-icon">C</div>
+            <h3>Cronograma</h3>
+            <p>Documento maestro de las tres jornadas.</p>
+            <div class="resource-link">Link de Drive pendiente</div>
+          </article>
+          <article class="resource-card placeholder">
+            <div class="resource-icon">F</div>
+            <h3>Brief fotografía</h3>
+            <p>Criterios de cobertura, tratamiento y prioridades visuales.</p>
+            <div class="resource-link">Por construir</div>
+          </article>
+          <article class="resource-card placeholder">
+            <div class="resource-icon">L</div>
+            <h3>Links rápidos</h3>
+            <p>Accesos operativos que el equipo necesite durante la conferencia.</p>
+            <div class="resource-link">Por definir</div>
+          </article>
+        </div>
+
+        <div class="empty-state">
+          <div><strong>Fuente de datos futura</strong>Drive + Google Sheets alimentarán esta web para evitar duplicar información.</div>
+          <span class="badge">Integración pendiente</span>
+        </div>
+      </section>
+
+      <section class="view" id="team">
+        <header class="section-head">
+          <div>
+            <span class="eyebrow">Quién hace qué</span>
+            <h2>Equipo</h2>
+          </div>
+          <p>Directorio operativo sin datos sensibles. Cuando definamos el equipo, acá quedarán roles y responsabilidades.</p>
+        </header>
+
+        <div class="team-grid">
+          <article class="team-card">
+            <div class="team-avatar">JU</div>
+            <h3>Jesús / Rafa</h3>
+            <div class="team-role">Dirección de fotografía</div>
+            <p>Coordinación general, cobertura y criterio visual.</p>
+            <div class="contact">Contacto interno · pendiente</div>
+          </article>
+          <article class="team-card placeholder">
+            <div class="team-avatar">01</div>
+            <h3>Fotógrafo/a 01</h3>
+            <div class="team-role">Rol por definir</div>
+            <p>Asignación, zonas y turnos pendientes.</p>
+            <div class="contact">Datos pendientes</div>
+          </article>
+          <article class="team-card placeholder">
+            <div class="team-avatar">02</div>
+            <h3>Fotógrafo/a 02</h3>
+            <div class="team-role">Rol por definir</div>
+            <p>Asignación, zonas y turnos pendientes.</p>
+            <div class="contact">Datos pendientes</div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div>SINERGIA · Conferencia TOMATULUGAR 2026</div>
+      <span>Photo Team Command Center · Template v0.1</span>
+    </footer>
+  </div>
+
+  <nav class="mobile-nav" aria-label="Navegación móvil">
+    <button class="is-active" data-view="home">Inicio</button>
+    <button data-view="agenda">Agenda</button>
+    <button data-view="coverage">Cobertura</button>
+    <button data-view="resources">Recursos</button>
+    <button data-view="team">Equipo</button>
+  </nav>
+
+  <script src="/app.js"></script>
 </body>
 </html>
