@@ -11,7 +11,7 @@
   <title>SINERGIA 2026 · Photo Team</title>
   <link rel="stylesheet" href="/styles.css?v=20261005-photo-assign1">
   <link rel="stylesheet" href="/ux-mobile.css?v=20261005-ux1">
-  <link rel="stylesheet" href="/social-plan-v2.css?v=20261005-shotops3">
+  <link rel="stylesheet" href="/social-plan-v2.css?v=20261005-shotbrief1">
 </head>
 <body data-day="1"><div class="site-shell">
     <header class="topbar">
@@ -472,7 +472,56 @@
   </div>
   <div class="save-toast" id="saveToast" role="status" aria-live="polite"></div>
 
-  <script src="/app.js?v=20261005-social-owners1"></script>
+  <div class="shot-brief-modal" id="shotBriefModal" hidden aria-hidden="true">
+    <button class="shot-brief-backdrop" type="button" data-shot-brief-close aria-label="Cerrar brief"></button>
+    <section class="shot-brief-card" role="dialog" aria-modal="true" aria-labelledby="shotBriefTitle">
+      <header class="shot-brief-header">
+        <div>
+          <span class="eyebrow" id="shotBriefEyebrow">Shot Brief</span>
+          <h2 id="shotBriefTitle">Brief de captura</h2>
+          <p id="shotBriefMeta"></p>
+        </div>
+        <button class="shot-brief-close" type="button" data-shot-brief-close aria-label="Cerrar">×</button>
+      </header>
+
+      <div class="shot-brief-intent">
+        <span>Intención</span>
+        <strong id="shotBriefIntent"></strong>
+      </div>
+
+      <div class="shot-brief-grid">
+        <article>
+          <span class="shot-brief-label">Qué tiene que quedar</span>
+          <ul id="shotBriefMust"></ul>
+        </article>
+        <article>
+          <span class="shot-brief-label">Cómo fotografiarlo</span>
+          <ul id="shotBriefVisual"></ul>
+        </article>
+        <article>
+          <span class="shot-brief-label">Momentos a esperar</span>
+          <ul id="shotBriefMoments"></ul>
+        </article>
+        <article class="shot-brief-avoid">
+          <span class="shot-brief-label">Evitar</span>
+          <ul id="shotBriefAvoid"></ul>
+        </article>
+      </div>
+
+      <footer class="shot-brief-footer">
+        <div>
+          <span>Destino</span>
+          <div id="shotBriefFeeds"></div>
+        </div>
+        <div class="shot-brief-delivery">
+          <span id="shotBriefHandoff"></span>
+          <span id="shotBriefEdit"></span>
+        </div>
+      </footer>
+    </section>
+  </div>
+
+  <script src="/app.js?v=20261005-shotbrief1"></script>
   <script type="text/javascript" async defer src="https://assets.pinterest.com/js/pinit.js"></script>
 </body>
 </html>
