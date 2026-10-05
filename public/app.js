@@ -566,11 +566,10 @@ function escapeHtml(value){
     .replaceAll('"',"&quot;");
 }
 
-function socialOwnerName(ownerId){
-  const member = latestTeamMembers.find(m => m.member_id === ownerId);
-  if (member) return member.name;
-  if (!ownerId || String(ownerId).startsWith("TEAM-DEMO")) return "Por asignar";
-  return ownerId;
+function socialOwnerName(row){
+  const format = String(row?.format || "").toLowerCase();
+  if (format.includes("reel")) return "Santi Almonacid";
+  return "Aaron García";
 }
 
 function socialDateLabel(date){
@@ -752,7 +751,7 @@ function renderSocialPlan(){
 
         <div class="social-timeline-side">
           <div class="social-plan-owner">
-            <strong>${escapeHtml(socialOwnerName(row.owner_id))}</strong>
+            <strong>${escapeHtml(socialOwnerName(row))}</strong>
             <span>Responsable</span>
           </div>
           <div class="social-plan-status">
