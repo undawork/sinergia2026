@@ -1448,3 +1448,10 @@ body.shot-brief-open{overflow:hidden}
     padding-right:4px;
   }
 }
+
+
+/* Navigation safety: hidden Shot Brief never intercepts input */
+.shot-brief-modal[hidden]{
+  display:none!important;
+  pointer-events:none!important;
+}
