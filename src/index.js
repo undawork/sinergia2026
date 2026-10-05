@@ -10,9 +10,11 @@ export default {
       const type = asset.headers.get("content-type") || "";
       if (!type.includes("text/html")) return asset;
       const html = await asset.text();
-      const enhanced = html.includes("/ux-mobile.css")
-        ? html
-        : html.replace("</head>", '  <link rel="stylesheet" href="/ux-mobile.css?v=20261005-ux1">\n</head>');
+      const styleLinks = [
+        html.includes("/ux-mobile.css") ? "" : '  <link rel="stylesheet" href="/ux-mobile.css?v=20261005-ux1">',
+        html.includes("/social-plan-v2.css") ? "" : '  <link rel="stylesheet" href="/social-plan-v2.css?v=20261005-social2">'
+      ].filter(Boolean).join("\n");
+      const enhanced = styleLinks ? html.replace("</head>", styleLinks + "\n</head>") : html;
       const headers = new Headers(asset.headers);
       headers.delete("content-length");
       return new Response(enhanced,{
