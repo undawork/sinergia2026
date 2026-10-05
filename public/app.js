@@ -585,6 +585,11 @@ function initShotListFilter(){
     })
     .forEach(card => grid.appendChild(card));
 
+  cards.forEach((card,index) => {
+    const number = card.querySelector(".shot-card-head > span");
+    if (number) number.textContent = String(index + 1).padStart(2,"0");
+  });
+
   const render = () => {
     const value = filter.value;
     let visible = 0;
