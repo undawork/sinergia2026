@@ -1118,6 +1118,7 @@ let selectedDay = 1;
 function setView(id){
   views.forEach(view => view.classList.toggle("is-active", view.id === id));
   navButtons.forEach(btn => btn.classList.toggle("is-active", btn.dataset.view === id));
+  document.body.dataset.currentView = id;
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
