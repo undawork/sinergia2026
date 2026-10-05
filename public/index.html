@@ -11,7 +11,7 @@
   <title>SINERGIA 2026 · Photo Team</title>
   <link rel="stylesheet" href="/styles.css?v=20261005-photo-assign1">
   <link rel="stylesheet" href="/ux-mobile.css?v=20261005-ux1">
-  <link rel="stylesheet" href="/social-plan-v2.css?v=20261005-social3">
+  <link rel="stylesheet" href="/social-plan-v2.css?v=20261005-agenda4">
 </head>
 <body data-day="1"><div class="site-shell">
     <header class="topbar">
@@ -123,19 +123,19 @@
         </header>
 
         <div class="agenda-mode-switcher" aria-label="Vista de agenda">
-          <button class="agenda-mode-btn is-active" type="button" data-agenda-tab="schedule">
+          <button class="agenda-mode-btn is-active" type="button" data-agenda-tab="social">
             <span>01</span>
-            <strong>Cronograma</strong>
-            <small>Qué está pasando</small>
-          </button>
-          <button class="agenda-mode-btn" type="button" data-agenda-tab="social">
-            <span>02</span>
             <strong>Social Media Plan</strong>
             <small>Qué se va a publicar</small>
           </button>
+          <button class="agenda-mode-btn" type="button" data-agenda-tab="schedule">
+            <span>02</span>
+            <strong>Cronograma</strong>
+            <small>Qué está pasando</small>
+          </button>
         </div>
 
-        <div class="agenda-panel is-active" data-agenda-panel="schedule">
+        <div class="agenda-panel" data-agenda-panel="schedule">
           <div class="day-switcher" aria-label="Seleccionar jornada">
             <button class="day-btn is-active" data-day="1">Jueves 8 <small>Distinción</small></button>
             <button class="day-btn" data-day="2">Viernes 9 <small>Encuentro</small></button>
@@ -155,7 +155,7 @@
           </div>
         </div>
 
-        <div class="agenda-panel" data-agenda-panel="social">
+        <div class="agenda-panel is-active" data-agenda-panel="social">
           <div class="day-switcher social-day-switcher" aria-label="Seleccionar jornada de Social Media Plan">
             <button class="day-btn social-day-btn is-active" type="button" data-social-day="2026-10-08">Jueves 8 <small>Distinción</small></button>
             <button class="day-btn social-day-btn" type="button" data-social-day="2026-10-09">Viernes 9 <small>Encuentro</small></button>
@@ -767,7 +767,7 @@
   </div>
   <div class="save-toast" id="saveToast" role="status" aria-live="polite"></div>
 
-  <script src="/app.js?v=20261005-social3"></script>
+  <script src="/app.js?v=20261005-agenda4"></script>
   <script type="text/javascript" async defer src="https://assets.pinterest.com/js/pinit.js"></script>
 </body>
 </html>
