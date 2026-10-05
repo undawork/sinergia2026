@@ -540,18 +540,24 @@ button,a,select,input{touch-action:manipulation}
   }
   .inspo-principles{
     grid-template-columns:1fr;
-    gap:0;
-    padding-bottom:38px;
+    gap:14px;
+    padding:8px 0 42px;
   }
-  .inspo-principle{padding:18px 4px}
-  .inspo-principle span{font-size:27px}
+  .inspo-principle{
+    min-height:0;
+    padding:24px 20px 22px;
+    border-radius:20px;
+  }
+  .inspo-principle span{font-size:40px}
   .inspo-principle h4{
-    margin:12px 0 6px;
-    font-size:16px;
+    margin:18px 0 8px;
+    font-size:17px;
+    line-height:1.2;
   }
   .inspo-principle p{
+    max-width:none;
     font-size:14.5px;
-    line-height:1.55;
+    line-height:1.58;
   }
   .brand-universe-kicker{font-size:10px}
   .inspo-brand-palette p{
