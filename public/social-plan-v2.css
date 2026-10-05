@@ -1262,7 +1262,11 @@ body.shot-brief-open{overflow:hidden}
   grid-template-columns:minmax(0,1fr) minmax(300px,.6fr);
   gap:30px;
   align-items:end;
-  padding-top:22px;
+  width:100%;
+  max-width:none;
+  margin:0;
+  padding:22px 0 0;
+  border-top:0;
 }
 #shotBriefFeeds{
   display:flex;
@@ -1304,7 +1308,7 @@ body.shot-brief-open{overflow:hidden}
     max-height:92dvh;
     overflow-y:auto;
     overflow-x:hidden;
-    padding:24px 19px calc(28px + env(safe-area-inset-bottom));
+    padding:24px 19px calc(16px + env(safe-area-inset-bottom));
     border-left:0;
     border-right:0;
     border-bottom:0;
@@ -1356,8 +1360,10 @@ body.shot-brief-open{overflow:hidden}
   }
   .shot-brief-footer{
     grid-template-columns:1fr;
-    gap:18px;
-    padding-top:20px;
+    gap:16px;
+    margin:0;
+    padding:18px 0 2px;
+    border-top:0;
   }
   .shot-brief-delivery{
     font-size:10px;
@@ -1367,7 +1373,7 @@ body.shot-brief-open{overflow:hidden}
 @media(max-width:430px){
   .shot-brief-card{
     max-height:94dvh;
-    padding:22px 16px calc(26px + env(safe-area-inset-bottom));
+    padding:22px 16px calc(14px + env(safe-area-inset-bottom));
   }
   .shot-brief-header h2{
     font-size:clamp(37px,12vw,50px);
