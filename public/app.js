@@ -86,7 +86,7 @@ const shotPlan = {
         priority:"Crítica",
         capture:["Llegadas y saludos","Credenciales / pulseras / manos","General + medio + detalle","Clips verticales 9:16","Grupos y expectativa"],
         feeds:["PREVIA Y ACREDITACIÓN · REEL 9:16"],
-        crew:"Berenice + Mariana · Jesús roaming",
+        crew:"Berenice + Nadia · Jesús roaming",
         handoff:"Primer handoff 14:15 → Mica · entrega 16:00",
         edit:"Mica · turno 13:00–16:30"
       },
@@ -97,7 +97,7 @@ const shotPlan = {
         priority:"Alta",
         capture:["Stands + branding","Interacción real","Comida / mesas / circulación","Fotos grupales","Vertical + 4:5"],
         feeds:["LLEGADA, APERTURA, WORSHIP · CARRUSEL 4:5","RECAP · banco de recursos"],
-        crew:"Berenice + Mariana · Jesús supervisa",
+        crew:"Berenice + Juan · Nadia apoyo · Jesús supervisa",
         handoff:"Selección exterior antes de 16:30",
         edit:"Mica continúa · Berenice entra a edición 16:30"
       },
@@ -119,7 +119,7 @@ const shotPlan = {
         priority:"Crítica",
         capture:["Músicos individuales + banda","People worship / reacciones","Wide de sala","Manos / instrumentos / pantallas","Clips 9:16 + fotos 4:5"],
         feeds:["LLEGADA, APERTURA, WORSHIP · CARRUSEL","RECAP · REEL"],
-        crew:"Santiago + Nati · Mariana people · Jesús supervisión",
+        crew:"Santiago + Nati · Nadia people · Jesús supervisión",
         handoff:"Primeras favoritas 19:10",
         edit:"Berenice · turno 16:30–20:00"
       },
@@ -141,7 +141,7 @@ const shotPlan = {
         priority:"Crítica",
         capture:["Altar / oración con respeto","Lágrimas / abrazos / ministración","Servidores trabajando","Planos generales de cierre","Últimos detalles / branding"],
         feeds:["FIN DÍA 1 · CARRUSEL","RECAP · REEL"],
-        crew:"Santiago + Nati · Juan + Nadia people · Mariana detalles · Jesús supervisa",
+        crew:"Santiago + Nati · Juan + Nadia people · Berenice detalles · Jesús supervisa",
         handoff:"Cierre selects 21:30 · handoff final 22:00",
         edit:"Mica · turno 20:00–22:00"
       }
@@ -175,7 +175,7 @@ const shotPlan = {
         priority:"Crítica",
         capture:["Banda + cantantes","People worship","Wide + medio + detalle","Clips 16:9 y verticales","Reacciones"],
         feeds:["WORSHIP · REEL 16:9","PRIMERA PARTE · CARRUSEL"],
-        crew:"Santiago + Nati · Berenice + Mariana people",
+        crew:"Santiago + Nati · Berenice + Mai people",
         handoff:"Worship 10:00 → edición · entrega 11:00",
         edit:"Mica recibe material en vivo"
       },
@@ -197,7 +197,7 @@ const shotPlan = {
         priority:"Alta",
         capture:["Mesa completa","Interacciones / risas / escucha","Detalles de comunión","General de audiencia","Cierre del turno mañana"],
         feeds:["PRIMERA PARTE · CARRUSEL FOTOS / CLIPS"],
-        crew:"Santiago + Nati · Mariana people · Jesús supervisa",
+        crew:"Santiago + Nati · Mai people · Jesús supervisa",
         handoff:"Handoff continuo 12:10–12:40 · entrega 13:00",
         edit:"Berenice · turno 10:30–14:00"
       },
@@ -208,7 +208,7 @@ const shotPlan = {
         priority:"Alta",
         capture:["Comunidad / mesas / conversaciones","Stands + productos","Activaciones","Retratos / grupos","CDO + detalles"],
         feeds:["ESPACIO TTL · REEL 9:16","RECAP","SERVIDORES / archivo"],
-        crew:"Mariana + Jesús TTL · Juan + Nadia CDO · Berenice vuelve 14:00",
+        crew:"Mai + Jesús TTL · Juan + Nadia CDO · Berenice vuelve 14:00",
         handoff:"TTL selects 15:30",
         edit:"Mica · turno 14:00–17:30"
       },
@@ -219,7 +219,7 @@ const shotPlan = {
         priority:"Crítica",
         capture:["1 general por sala","Speaker por sala","Audiencia + interacción","Detalle / branding","Clips cortos verticales"],
         feeds:["TALLERES · CARRUSEL FOTOS / CLIPS"],
-        crew:"Santiago + Nati + Berenice + Jesús por salas · Juan/Nadia apoyo · Mariana people",
+        crew:"Santiago + Nati + Berenice + Jesús por salas · Juan/Nadia apoyo · Mai people",
         handoff:"Cada sala envía selección antes de 17:20 · entrega 18:00",
         edit:"Mica hasta 17:30 → Berenice entra a edición"
       },
@@ -230,7 +230,7 @@ const shotPlan = {
         priority:"Crítica",
         capture:["Entrada + expectativa","Banda / músicos","People worship","Wide + crowd","Vertical 9:16"],
         feeds:["WORSHIP · REEL 9:16","FIN VIERNES · CARRUSEL","RECAP"],
-        crew:"Santiago + Nati · Mariana people · Jesús supervisión",
+        crew:"Santiago + Nati · Mai people · Jesús supervisión",
         handoff:"Worship selects 19:20 · entrega 20:00",
         edit:"Berenice · turno 17:30–21:00"
       },
@@ -275,7 +275,7 @@ const shotPlan = {
         priority:"Media",
         capture:["Oración + comunidad","Llegadas","Detalles de espacio","Servidores tempranos","Verticales de recurso"],
         feeds:["RECAP FINAL · banco","SERVIDORES · CARRUSEL"],
-        crew:"Juan + Nadia · Jesús roaming",
+        crew:"Nati + Nadia en CDO · Jesús roaming",
         handoff:"Primer handoff 08:45",
         edit:"Mica · turno 07:00–10:30"
       },
@@ -286,7 +286,7 @@ const shotPlan = {
         priority:"Crítica",
         capture:["Músicos + banda","People worship","Wide / crowd","Detalles de instrumentos","Vertical + 1:1"],
         feeds:["WORSHIP · REEL 1:1","TURNO MAÑANA · CARRUSEL"],
-        crew:"Santiago + Nati · Berenice/Mariana people",
+        crew:"Santiago + Nati · Berenice/Mai people",
         handoff:"Worship selects 09:50",
         edit:"Mica recibe material"
       },
@@ -308,7 +308,7 @@ const shotPlan = {
         priority:"Crítica",
         capture:["Speaker + expresiones","Audiencia / emoción","General sala","Detalles de escenario","Momentos de oración"],
         feeds:["HEIDI · REEL 9:16","TURNO MAÑANA · CARRUSEL"],
-        crew:"Santiago + Nati · Mariana people · Jesús supervisa",
+        crew:"Santiago + Nati · Mai people · Jesús supervisa",
         handoff:"Heidi + mañana antes de 12:30 · carrusel 13:00",
         edit:"Berenice · turno 10:30–14:00"
       },
@@ -319,7 +319,7 @@ const shotPlan = {
         priority:"Alta",
         capture:["Servidores en acción","Hospitalidad / producción","Mesas + comunidad","Stands / merch","Retratos y grupos"],
         feeds:["SERVIDORES · CARRUSEL FOTOS","RECAP FINAL"],
-        crew:"Berenice vuelve 14:00 + Mariana · Jesús roaming · Juan/Nadia apoyo",
+        crew:"Berenice vuelve 14:00 + Mai · Nadia apoyo · Jesús roaming",
         handoff:"Servidores selects 16:30 · entrega 19:00",
         edit:"Mica · turno 14:00–17:30"
       },
@@ -330,7 +330,7 @@ const shotPlan = {
         priority:"Crítica",
         capture:["General por sala","Speaker por sala","Audiencia + preguntas","Detalles / branding","Clips verticales"],
         feeds:["TALLERES · CARRUSEL FOTOS / CLIPS"],
-        crew:"Santiago + Nati + Berenice + Jesús por salas · Juan/Nadia apoyo",
+        crew:"Santiago + Nati + Berenice + Jesús por salas · Mai + Nadia apoyo",
         handoff:"Selección por sala 17:15 · entrega 18:00",
         edit:"Mica hasta 17:30 → Berenice releva"
       },
@@ -341,7 +341,7 @@ const shotPlan = {
         priority:"Crítica",
         capture:["Entrada / expectativa","Worship banda","People worship","Wide / crowd","1:1 limpio + vertical"],
         feeds:["WORSHIP · REEL 1:1","FIN SÁBADO · CARRUSEL","RECAP FINAL"],
-        crew:"Santiago + Nati · Mariana people · Jesús supervisión",
+        crew:"Santiago + Nati · Mai people · Jesús supervisión",
         handoff:"Worship selects 19:20 · entrega 20:00",
         edit:"Berenice · turno 17:30–21:00"
       },
@@ -363,13 +363,31 @@ const shotPlan = {
         priority:"Crítica",
         capture:["Mesa completa","Comunión + interacción","Cierre emocional","Foto final / crowd","Servidores + backstage final"],
         feeds:["FIN SÁBADO · CARRUSEL","RECAP FINAL · REEL"],
-        crew:"Santiago + Nati · Berenice vuelve 21:00 · Juan/Nadia people · Jesús supervisa",
+        crew:"Santiago + Nati · Berenice vuelve 21:00 · Mai + Nadia people · Jesús supervisa",
         handoff:"Fin sábado 21:35 · cierre final 22:30",
         edit:"Mica · turno final 21:00–22:30"
       }
     ]
   }
 };
+
+const SHOT_AVAILABILITY = {
+  1: {unavailable:["Mai"]},
+  2: {unavailable:[]},
+  3: {unavailable:["Juan"]}
+};
+
+function validateShotAvailability(){
+  Object.entries(SHOT_AVAILABILITY).forEach(([day, config]) => {
+    const blocks = shotPlan[day]?.blocks || [];
+    config.unavailable.forEach(name => {
+      const conflicts = blocks.filter(block => new RegExp(`\\b${name}\\b`,"i").test(String(block.crew || "")));
+      if (conflicts.length) console.warn(`Shot List: ${name} no disponible el día ${day}`, conflicts);
+    });
+  });
+}
+
+validateShotAvailability();
 
 const EVENT_TZ = "America/Argentina/Cordoba";
 const TEAM_DATA_URL = "/data/team.json";
