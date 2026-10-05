@@ -1522,7 +1522,8 @@ function refreshClockDrivenUI(){
 }
 
 const initialAgendaDay = selectCurrentDay();
-renderDay(initialAgendaDay);
+selectedDay = initialAgendaDay;
+document.body.dataset.day = initialAgendaDay;
 setSocialDay(schedule[initialAgendaDay].date, {render:false});
 setShotDay(initialAgendaDay, {render:false});
 renderShotPlan();
