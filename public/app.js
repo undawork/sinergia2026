@@ -1358,77 +1358,59 @@ const views = [...document.querySelectorAll(".view")];
 let selectedDay = 1;
 
 function releaseNavigationLocks(){
-  // Any navigation action should always restore a usable document state.
-  document.body.classList.remove("auth-open","shot-brief-open");
-  document.body.style.removeProperty("overflow");
-  document.documentElement.style.removeProperty("overflow");
-
+  // Close every interactive overlay before switching sections.
   const authModal = document.querySelector("#authModal");
+  const shotBriefModal = document.querySelector("#shotBriefModal");
+
   if (authModal){
     authModal.hidden = true;
     authModal.setAttribute("aria-hidden","true");
+    authModal.style.removeProperty("display");
   }
-
-  const shotBriefModal = document.querySelector("#shotBriefModal");
   if (shotBriefModal){
     shotBriefModal.hidden = true;
     shotBriefModal.setAttribute("aria-hidden","true");
+    shotBriefModal.style.removeProperty("display");
   }
 
-  // Prevent a stale focused control inside a hidden overlay from trapping keyboard/mobile input.
+  document.body.classList.remove("auth-open","shot-brief-open");
+  document.body.style.removeProperty("overflow");
+  document.body.style.removeProperty("position");
+  document.body.style.removeProperty("top");
+  document.documentElement.style.removeProperty("overflow");
+
   const active = document.activeElement;
   if (active && active !== document.body && typeof active.blur === "function") active.blur();
 }
 
-function setView(id, {scroll = true} = {}){
-  const target = views.find(view => view.id === id);
-  if (!target) return false;
+function setView(id){
+  const target = document.getElementById(id);
+  if (!target || !target.classList.contains("view")) return;
 
   releaseNavigationLocks();
 
-  views.forEach(view => {
-    const active = view === target;
-    view.classList.toggle("is-active", active);
-    view.setAttribute("aria-hidden", active ? "false" : "true");
+  views.forEach(view => view.classList.toggle("is-active", view === target));
+  navButtons.forEach(button => {
+    const active = button.dataset.view === id;
+    button.classList.toggle("is-active", active);
+    if (active) button.setAttribute("aria-current","page");
+    else button.removeAttribute("aria-current");
   });
 
-  navButtons.forEach(btn => {
-    const active = btn.dataset.view === id;
-    btn.classList.toggle("is-active", active);
-    if (active) btn.setAttribute("aria-current","page");
-    else btn.removeAttribute("aria-current");
-  });
-
-  document.body.dataset.currentView = id;
-
-  // This is a SPA-style view switch. Never leave a "#" URL behind.
-  if (window.location.hash){
-    history.replaceState(history.state, "", window.location.pathname + window.location.search);
-  }
-
-  if (scroll) window.scrollTo({top:0,left:0,behavior:"auto"});
-  return true;
+  // Reset position without invoking browser hash/history behavior.
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+  requestAnimationFrame(() => window.scrollTo(0,0));
 }
 
 function handleInternalNavigation(event){
-  const control = event.currentTarget;
-  const id = control.dataset.view || control.dataset.go;
-  if (!id) return;
-
-  // Anchors such as the logo have a fallback href, but normal clicks stay inside the app.
-  if (event.cancelable) event.preventDefault();
-  setView(id);
+  event.preventDefault();
+  const id = event.currentTarget.dataset.view || event.currentTarget.dataset.go;
+  if (id) setView(id);
 }
 
-navButtons.forEach(btn => btn.addEventListener("click", handleInternalNavigation));
-document.querySelectorAll("[data-go]").forEach(el => el.addEventListener("click", handleInternalNavigation));
-
-// Recover gracefully from old/bookmarked "#"-style URLs.
-window.addEventListener("hashchange", () => {
-  if (window.location.hash === "#" || window.location.hash === "#home"){
-    setView("home", {scroll:false});
-  }
-});
+navButtons.forEach(button => button.addEventListener("click", handleInternalNavigation));
+document.querySelectorAll("[data-go]").forEach(button => button.addEventListener("click", handleInternalNavigation));
 
 function parseClock(value){
   const match = String(value).match(/(\d{1,2}):(\d{2})/);
