@@ -271,6 +271,54 @@ function socialDateLabel(date){
   return labels[date] || date;
 }
 
+const SOCIAL_DAY_META = {
+  "2026-10-08": {index:"01", name:"Jueves 8", concept:"Distinción"},
+  "2026-10-09": {index:"02", name:"Viernes 9", concept:"Encuentro"},
+  "2026-10-10": {index:"03", name:"Sábado 10", concept:"Integración"},
+  "unscheduled": {index:"04", name:"Sin fecha", concept:"Pendiente"}
+};
+
+function socialDayMeta(date){
+  return SOCIAL_DAY_META[date || "unscheduled"] || {
+    index:"—",
+    name:socialDateLabel(date),
+    concept:"Publicaciones"
+  };
+}
+
+function socialFormatKind(format){
+  const value = String(format || "").toLowerCase();
+  if (value.includes("reel")) return "reel";
+  if (value.includes("carrusel") || value.includes("carousel")) return "carousel";
+  if (value.includes("story") || value.includes("historia")) return "story";
+  if (value.includes("foto") || value.includes("photo")) return "photo";
+  return "other";
+}
+
+function socialAspectRatio(format){
+  const match = String(format || "").match(/\b\d{1,2}:\d{1,2}\b/);
+  return match ? match[0] : "";
+}
+
+function socialDeadlineMinutes(row){
+  const value = row.deadline_time || row.planned_time || "";
+  const match = String(value).match(/(\d{1,2}):(\d{2})/);
+  return match ? Number(match[1]) * 60 + Number(match[2]) : 9999;
+}
+
+function socialSortRows(rows){
+  const dateOrder = {"2026-10-08":1,"2026-10-09":2,"2026-10-10":3};
+  return [...rows].sort((a,b) => {
+    const da = dateOrder[a.planned_date] || 99;
+    const db = dateOrder[b.planned_date] || 99;
+    if (da !== db) return da - db;
+    const ta = socialDeadlineMinutes(a);
+    const tb = socialDeadlineMinutes(b);
+    if (ta !== tb) return ta - tb;
+    return String(a.publishing_id || "").localeCompare(String(b.publishing_id || ""));
+  });
+}
+
 function fillSocialFilter(id, rows, key, fallback){
   const select = document.querySelector(id);
   if (!select) return;
@@ -333,42 +381,84 @@ function renderSocialPlan(){
   document.querySelector("#socialKpiPending").textContent = pending;
   document.querySelector("#socialPlanCount").textContent = `${total} ${total === 1 ? "pieza" : "piezas"}`;
 
-  const rows = socialFilteredRows();
+  const selectedDay = document.querySelector("#socialDayFilter")?.value || "2026-10-08";
+  document.querySelectorAll("[data-social-day]").forEach(button => {
+    button.classList.toggle("is-active", button.dataset.socialDay === selectedDay);
+  });
+
+  const rows = socialSortRows(socialFilteredRows());
   if (!rows.length){
     list.innerHTML = '<div class="social-plan-empty">No hay publicaciones que coincidan con estos filtros.</div>';
     return;
   }
 
-  list.innerHTML = rows.map(row => {
-    const statusValue = String(row.status || "Sin comenzar");
-    const status = statusValue.toLowerCase();
-    const time = row.deadline_time || row.planned_time || "Hora límite pendiente";
-    const rawNote = row.notes || "";
-    const isReferenceUrl = /^https?:\/\//i.test(rawNote);
-    const note = isReferenceUrl ? "Referencia visual disponible" : (rawNote || (row.copy_text ? row.copy_text : "Sin notas adicionales."));
-    return `
-      <article class="social-plan-item ${row.is_placeholder ? "is-placeholder" : ""}">
-        <div class="social-plan-when">
-          <strong>${escapeHtml(socialDateLabel(row.planned_date))}</strong>
-          <span>Hora límite · ${escapeHtml(time)}</span>
-        </div>
-        <div class="social-plan-main">
-          <h4>${escapeHtml(row.title || "Pieza sin título")}</h4>
-          <p>${escapeHtml(note)}${isReferenceUrl ? ` · <a href="${escapeHtml(rawNote)}" target="_blank" rel="noopener noreferrer">Ver referencia</a>` : ""}</p>
-          <div class="social-plan-tags">
-            ${row.platform ? `<span>${escapeHtml(row.platform)}</span>` : ""}
-            ${row.format ? `<span>${escapeHtml(row.format)}</span>` : ""}
-            ${row.schedule_id ? `<span>${escapeHtml(row.schedule_id)}</span>` : ""}
+  const groups = new Map();
+  rows.forEach(row => {
+    const key = row.planned_date || "unscheduled";
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(row);
+  });
+
+  list.innerHTML = [...groups.entries()].map(([date, dayRows]) => {
+    const day = socialDayMeta(date);
+    const cards = dayRows.map(row => {
+      const statusValue = String(row.status || "Sin comenzar");
+      const time = row.deadline_time || row.planned_time || "—";
+      const rawNote = row.notes || "";
+      const isReferenceUrl = /^https?:\/\//i.test(rawNote);
+      const noteMarkup = isReferenceUrl
+        ? `Referencia visual disponible. <a href="${escapeHtml(rawNote)}" target="_blank" rel="noopener noreferrer">Ver referencia ↗</a>`
+        : escapeHtml(rawNote || row.copy_text || "Sin notas adicionales.");
+      const formatLabel = row.format || "Sin formato";
+      const formatKind = socialFormatKind(formatLabel);
+      const aspectRatio = socialAspectRatio(formatLabel);
+
+      return `
+        <article class="social-plan-item ${row.is_placeholder ? "is-placeholder" : ""}" data-format-kind="${formatKind}">
+          <div class="social-card-top">
+            <span class="social-format-badge">${escapeHtml(formatLabel)}</span>
+            <div class="social-card-deadline">
+              <span>Entrega</span>
+              <strong>${escapeHtml(time)}</strong>
+            </div>
           </div>
+
+          <div class="social-plan-main">
+            <h4>${escapeHtml(row.title || "Pieza sin título")}</h4>
+            <p>${noteMarkup}</p>
+            <div class="social-plan-tags">
+              ${row.platform ? `<span>${escapeHtml(row.platform)}</span>` : ""}
+              ${aspectRatio ? `<span>Ratio ${escapeHtml(aspectRatio)}</span>` : ""}
+              ${row.schedule_id ? `<span>${escapeHtml(row.schedule_id)}</span>` : ""}
+            </div>
+          </div>
+
+          <div class="social-card-footer">
+            <div class="social-plan-owner">
+              <strong>${escapeHtml(socialOwnerName(row.owner_id))}</strong>
+              <span>Responsable</span>
+            </div>
+            <div class="social-plan-status">
+              ${socialStatusControl(row, statusValue)}
+            </div>
+          </div>
+        </article>`;
+    }).join("");
+
+    return `
+      <section class="social-day-group" data-social-date="${escapeHtml(date)}">
+        <aside class="social-day-overview">
+          <div class="social-day-number">${day.index}</div>
+          <div>
+            <div class="social-day-name">${escapeHtml(day.name)}</div>
+            <div class="social-day-concept">${escapeHtml(day.concept)}</div>
+          </div>
+          <span class="social-day-count">${dayRows.length} ${dayRows.length === 1 ? "pieza" : "piezas"}</span>
+        </aside>
+        <div class="social-day-cards">
+          ${cards}
         </div>
-        <div class="social-plan-owner">
-          <strong>${escapeHtml(socialOwnerName(row.owner_id))}</strong>
-          <span>Responsable</span>
-        </div>
-        <div class="social-plan-status">
-          ${socialStatusControl(row, statusValue)}
-        </div>
-      </article>`;
+      </section>`;
   }).join("");
 }
 
@@ -564,6 +654,24 @@ document.querySelector("#socialPlanList")?.addEventListener("change", event => {
 ["#socialDayFilter","#socialPlatformFilter","#socialFormatFilter","#socialStatusFilter"].forEach(selector => {
   document.querySelector(selector)?.addEventListener("change", renderSocialPlan);
 });
+
+document.querySelectorAll("[data-social-day]").forEach(button => {
+  button.addEventListener("click", () => {
+    const select = document.querySelector("#socialDayFilter");
+    if (!select) return;
+    select.value = button.dataset.socialDay || "all";
+    renderSocialPlan();
+  });
+});
+
+document.querySelector("#socialClearFilters")?.addEventListener("click", () => {
+  ["#socialPlatformFilter","#socialFormatFilter","#socialStatusFilter"].forEach(selector => {
+    const select = document.querySelector(selector);
+    if (select) select.value = "all";
+  });
+  renderSocialPlan();
+});
+
 document.querySelector("#publishingRefreshBtn")?.addEventListener("click", refreshPublishingData);
 
 function initShotListFilter(){
