@@ -71,6 +71,103 @@ const schedule = {
 };
 
 const EVENT_TZ = "America/Argentina/Cordoba";
+const TEAM_DATA_URL = "/data/team.json";
+const TEAM_REFRESH_MS = 10000;
+let lastTeamPayloadHash = "";
+let teamRefreshTimer = null;
+
+function initials(name){
+  return String(name || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0,2)
+    .map(part => part[0]?.toUpperCase() || "")
+    .join("");
+}
+
+function teamCard(member){
+  const isLead = String(member.role).toLowerCase() === "encargado";
+  const roleLabel = isLead ? "Encargado/a · Fotografía" : "Fotografía";
+  const description = isLead
+    ? "Coordinación y cobertura del equipo de fotografía."
+    : "Integrante del equipo de fotografía.";
+  return `
+    <article class="team-card ${isLead ? "is-lead" : ""}">
+      <div class="team-avatar">${initials(member.name)}</div>
+      <h3>${member.name}</h3>
+      <div class="team-role">${roleLabel}</div>
+      <p>${description}</p>
+      <div class="contact">${member.status === "activo" ? "Activo" : member.status || ""}</div>
+    </article>`;
+}
+
+function setSyncUI(state, label){
+  const status = document.querySelector("#syncStatus");
+  const btns = [document.querySelector("#refreshDataBtn"), document.querySelector("#teamRefreshBtn")].filter(Boolean);
+  if (status){
+    status.dataset.state = state;
+    const text = status.querySelector("span");
+    if (text) text.textContent = label;
+  }
+  btns.forEach(btn => {
+    btn.disabled = state === "loading";
+    btn.classList.toggle("is-loading", state === "loading");
+  });
+}
+
+async function refreshTeamData({manual = false} = {}){
+  setSyncUI("loading", manual ? "Actualizando…" : "Sincronizando…");
+  try{
+    const response = await fetch(`${TEAM_DATA_URL}?t=${Date.now()}`, {cache:"no-store"});
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const payload = await response.json();
+
+    const members = Array.isArray(payload.members)
+      ? payload.members
+          .filter(m => String(m.area).toLowerCase() === "fotografía" && String(m.status).toLowerCase() === "activo")
+          .sort((a,b) => Number(a.display_order || 0) - Number(b.display_order || 0))
+      : [];
+
+    const grid = document.querySelector("#teamGrid");
+    const count = document.querySelector("#teamCount");
+    const syncTime = document.querySelector("#teamSyncTime");
+
+    if (grid && members.length){
+      const hash = JSON.stringify(members);
+      if (hash !== lastTeamPayloadHash){
+        grid.innerHTML = members.map(teamCard).join("");
+        lastTeamPayloadHash = hash;
+      }
+    }
+
+    if (count) count.textContent = `${members.length} integrantes`;
+    if (syncTime){
+      syncTime.textContent = `Última consulta · ${new Intl.DateTimeFormat("es-AR", {
+        hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false
+      }).format(new Date())}`;
+    }
+    setSyncUI("ok", "Actualizado");
+  }catch(error){
+    console.warn("No se pudo actualizar TEAM:", error);
+    const syncTime = document.querySelector("#teamSyncTime");
+    if (syncTime) syncTime.textContent = "No se pudo actualizar · usando última versión";
+    setSyncUI("error", "Sin conexión");
+  }
+}
+
+function startTeamAutoRefresh(){
+  if (teamRefreshTimer) clearInterval(teamRefreshTimer);
+  refreshTeamData();
+  teamRefreshTimer = setInterval(() => refreshTeamData(), TEAM_REFRESH_MS);
+}
+
+document.querySelector("#refreshDataBtn")?.addEventListener("click", () => refreshTeamData({manual:true}));
+document.querySelector("#teamRefreshBtn")?.addEventListener("click", () => refreshTeamData({manual:true}));
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) refreshTeamData();
+});
+
 const navButtons = [...document.querySelectorAll("[data-view]")];
 const views = [...document.querySelectorAll(".view")];
 let selectedDay = 1;
@@ -409,3 +506,4 @@ function refreshClockDrivenUI(){
 renderDay(selectCurrentDay());
 refreshClockDrivenUI();
 setInterval(refreshClockDrivenUI, 30000);
+startTeamAutoRefresh();
