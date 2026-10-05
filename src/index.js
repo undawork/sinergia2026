@@ -5,7 +5,22 @@ const ADMIN_USER = "sinergia";
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (!url.pathname.startsWith("/api/")) return env.ASSETS.fetch(request);
+    if (!url.pathname.startsWith("/api/")) {
+      const asset = await env.ASSETS.fetch(request);
+      const type = asset.headers.get("content-type") || "";
+      if (!type.includes("text/html")) return asset;
+      const html = await asset.text();
+      const enhanced = html.includes("/ux-mobile.css")
+        ? html
+        : html.replace("</head>", '  <link rel="stylesheet" href="/ux-mobile.css?v=20261005-ux1">\n</head>');
+      const headers = new Headers(asset.headers);
+      headers.delete("content-length");
+      return new Response(enhanced,{
+        status:asset.status,
+        statusText:asset.statusText,
+        headers
+      });
+    }
     try {
       if (url.pathname === "/api/login") return login(request, env);
       if (url.pathname === "/api/session") return session(request, env);
