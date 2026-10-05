@@ -72,11 +72,11 @@ const schedule = {
 
 const shotPlan = {
   1: {
+    close:"22:00",
     editing: [
       ["13:00–16:30","Mica","Ingest + PREVIA / primeras selecciones"],
-      ["16:30–20:00","Berenice","Apertura + people + worship · Mariana cubre su zona"],
-      ["20:00–23:00","Mica","Asher + cierre + selects del día"],
-      ["22:30–01:00","Santiago","RECAP post-captura · Mica backup"]
+      ["16:30–20:00","Berenice","Apertura + people + worship"],
+      ["20:00–22:00","Mica","Asher + cierre + selects finales"]
     ],
     blocks: [
       {
@@ -121,7 +121,7 @@ const shotPlan = {
         feeds:["LLEGADA, APERTURA, WORSHIP · CARRUSEL","RECAP · REEL"],
         crew:"Santiago + Nati · Mariana people · Jesús supervisión",
         handoff:"Primeras favoritas 19:10",
-        edit:"Berenice recibe worship · Mica backup"
+        edit:"Berenice · turno 16:30–20:00"
       },
       {
         time:"19:30–20:30",
@@ -132,28 +132,29 @@ const shotPlan = {
         feeds:["ASHER · REEL 1:1","FIN DÍA 1 · CARRUSEL","RECAP"],
         crew:"Santiago principal · Nati secundaria · Jesús roaming",
         handoff:"Asher selects 20:05 → edición · entrega 20:30",
-        edit:"Berenice hasta 20:00 → Mica toma relevo"
+        edit:"Berenice hasta 20:00 → Mica releva hasta cierre"
       },
       {
-        time:"20:30–22:15",
+        time:"20:30–22:00",
         event:"Ministración + cierre",
         zone:"Auditorio / people",
         priority:"Crítica",
         capture:["Altar / oración con respeto","Lágrimas / abrazos / ministración","Servidores trabajando","Planos generales de cierre","Últimos detalles / branding"],
         feeds:["FIN DÍA 1 · CARRUSEL","RECAP · REEL"],
         crew:"Santiago + Nati · Juan + Nadia people · Mariana detalles · Jesús supervisa",
-        handoff:"Cierre selects 21:30 y 22:15",
-        edit:"Mica · Santiago entra a RECAP al terminar captura"
+        handoff:"Cierre selects 21:30 · handoff final 22:00",
+        edit:"Mica · turno 20:00–22:00"
       }
     ]
   },
   2: {
+    close:"22:00",
     editing: [
       ["07:00–10:30","Mica","Ingest CDO + worship / entrega 11:00"],
       ["10:30–14:00","Berenice","Mariano + mañana / carrusel 13:00"],
       ["14:00–17:30","Mica","TTL + preparación talleres"],
       ["17:30–21:00","Berenice","Talleres + worship + Heidi"],
-      ["22:00–01:00","Santiago","RECAP post-captura · Mica backup"]
+      ["21:00–22:00","Mica","Cierre + handoff final"]
     ],
     blocks: [
       {
@@ -242,28 +243,29 @@ const shotPlan = {
         feeds:["HEIDI · REEL 1:1","FIN VIERNES · CARRUSEL","RECAP"],
         crew:"Santiago + Nati · Juan/Nadia people · Jesús roaming",
         handoff:"Heidi selects 20:35 · cierre 21:15",
-        edit:"Berenice hasta 21:00 · Mica backup"
+        edit:"Berenice hasta 21:00 → Mica releva hasta cierre"
       },
       {
-        time:"21:30–22:15",
+        time:"21:30–22:00",
         event:"Cierre viernes",
         zone:"Auditorio / salidas",
         priority:"Alta",
         capture:["Cierre + anuncios","Abrazos / salidas","Últimos grupos","Servidores","Plano final de sala"],
         feeds:["FIN VIERNES · CARRUSEL","RECAP · REEL"],
         crew:"Berenice vuelve a captura · Santiago + Nati · Jesús supervisa",
-        handoff:"Último handoff 22:15",
-        edit:"Santiago entra 22:00–01:00 para RECAP"
+        handoff:"Handoff final 22:00",
+        edit:"Mica · turno final 21:00–22:00"
       }
     ]
   },
   3: {
+    close:"22:30",
     editing: [
       ["07:00–10:30","Mica","Ingest CDO + worship / Miller"],
       ["10:30–14:00","Berenice","Miller + Heidi + turno mañana"],
       ["14:00–17:30","Mica","Servidores + TTL + talleres"],
       ["17:30–21:00","Berenice","Talleres + worship + Asher"],
-      ["22:30–01:30","Santiago","RECAP final · Mica backup"]
+      ["21:00–22:30","Mica","Mesa de comunión + cierre final"]
     ],
     blocks: [
       {
@@ -363,7 +365,7 @@ const shotPlan = {
         feeds:["FIN SÁBADO · CARRUSEL","RECAP FINAL · REEL"],
         crew:"Santiago + Nati · Berenice vuelve 21:00 · Juan/Nadia people · Jesús supervisa",
         handoff:"Fin sábado 21:35 · cierre final 22:30",
-        edit:"Santiago entra 22:30–01:30 · Mica backup"
+        edit:"Mica · turno final 21:00–22:30"
       }
     ]
   }
@@ -791,13 +793,14 @@ function renderShotPlan(){
 
   const plan = shotPlan[selectedShotDay];
   const count = document.querySelector("#shotBlockCount");
+  const headline = document.querySelector("#shotEditingHeadline");
   if (count) count.textContent = `${plan.blocks.length} bloques`;
+  if (headline) headline.textContent = `Edición hasta cierre · ${plan.close}`;
 
   shifts.innerHTML = plan.editing.map(([time, editor, task]) => `
-    <span class="shot-edit-shift">
+    <span class="shot-edit-shift" title="${escapeHtml(task)}">
       <strong>${escapeHtml(time)}</strong>
       <span>${escapeHtml(editor)}</span>
-      <small>${escapeHtml(task)}</small>
     </span>`
   ).join("");
 
@@ -819,29 +822,27 @@ function renderShotPlan(){
             </div>
           </div>
 
-          <div class="shot-capture-list">
-            ${block.capture.map(item => `<span>${escapeHtml(item)}</span>`).join("")}
+          <div class="shot-capture-block">
+            <span class="shot-ops-label">Capturar</span>
+            <div class="shot-capture-list">
+              ${block.capture.map(item => `<span>${escapeHtml(item)}</span>`).join("")}
+            </div>
           </div>
 
           <div class="shot-feeds">
-            <span class="shot-ops-label">Alimenta</span>
+            <span class="shot-ops-label">Para</span>
             <div>${block.feeds.map(feed => `<strong>${escapeHtml(feed)}</strong>`).join("")}</div>
+          </div>
+
+          <div class="shot-block-meta">
+            <span><b>Handoff</b> · ${escapeHtml(block.handoff)}</span>
+            <span><b>Edición</b> · ${escapeHtml(block.edit)}</span>
           </div>
         </div>
 
         <div class="shot-ops-side">
-          <div>
-            <span class="shot-ops-label">Captura</span>
-            <strong>${escapeHtml(block.crew)}</strong>
-          </div>
-          <div>
-            <span class="shot-ops-label">Handoff</span>
-            <strong>${escapeHtml(block.handoff)}</strong>
-          </div>
-          <div class="shot-edit-note">
-            <span class="shot-ops-label">Edición</span>
-            <strong>${escapeHtml(block.edit)}</strong>
-          </div>
+          <span class="shot-ops-label">Equipo</span>
+          <strong>${escapeHtml(block.crew)}</strong>
         </div>
       </article>`;
   }).join("");
