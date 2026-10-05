@@ -154,79 +154,59 @@
         </div>
 
         <div class="agenda-panel" data-agenda-panel="social">
-          <div class="social-plan-head">
-            <div>
-              <span class="eyebrow">Publishing / RRSS</span>
-              <h3>Social Media Plan</h3>
-              <p>Plan operativo de publicaciones vinculado al cronograma. La fuente de verdad es la pestaña <strong>PUBLISHING</strong> del Sheet.</p>
-            </div>
-            <div class="social-plan-sync">
-              <span id="socialPlanCount">— piezas</span>
-              <button class="refresh-data-btn" id="publishingRefreshBtn" type="button">
-                <span class="refresh-icon" aria-hidden="true">↻</span>
-                <span>Actualizar</span>
-              </button>
-            </div>
+          <div class="day-switcher social-day-switcher" aria-label="Seleccionar jornada de Social Media Plan">
+            <button class="day-btn social-day-btn is-active" type="button" data-social-day="2026-10-08">Jueves 8 <small>Distinción</small></button>
+            <button class="day-btn social-day-btn" type="button" data-social-day="2026-10-09">Viernes 9 <small>Encuentro</small></button>
+            <button class="day-btn social-day-btn" type="button" data-social-day="2026-10-10">Sábado 10 <small>Integración</small></button>
           </div>
 
-          <div class="social-day-switcher" id="socialDaySwitcher" aria-label="Seleccionar jornada de Social Media Plan">
-            <button class="social-day-btn is-active" type="button" data-social-day="2026-10-08">
-              <span>01</span><strong>Jueves 8</strong><small>Distinción</small>
-            </button>
-            <button class="social-day-btn" type="button" data-social-day="2026-10-09">
-              <span>02</span><strong>Viernes 9</strong><small>Encuentro</small>
-            </button>
-            <button class="social-day-btn" type="button" data-social-day="2026-10-10">
-              <span>03</span><strong>Sábado 10</strong><small>Integración</small>
-            </button>
-            <button class="social-day-btn" type="button" data-social-day="all">
-              <span>∞</span><strong>Todas</strong><small>Vista completa</small>
-            </button>
-          </div>
-
-          <div class="social-plan-summary" aria-label="Resumen de publicaciones">
-            <article><span>Total</span><strong id="socialKpiTotal">0</strong><small>Piezas planificadas</small></article>
-            <article><span>Listas</span><strong id="socialKpiReady">0</strong><small>Listas / programadas</small></article>
-            <article><span>Publicadas</span><strong id="socialKpiPublished">0</strong><small>Ya salieron</small></article>
-            <article><span>Pendientes</span><strong id="socialKpiPending">0</strong><small>Requieren definición</small></article>
-          </div>
-
-          <div class="social-filter-shell">
-            <div class="social-filter-head">
+          <div class="schedule-layout social-schedule-layout">
+            <aside class="day-overview social-day-overview">
+              <div class="day-number" id="socialDayNumber">01</div>
               <div>
-                <span>Filtros</span>
-                <strong>Refina las piezas visibles</strong>
+                <div class="day-name" id="socialDayName">Jueves 8</div>
+                <div class="day-concept" id="socialDayConcept">Distinción</div>
               </div>
-              <button class="social-filter-clear" id="socialClearFilters" type="button">Limpiar filtros</button>
-            </div>
-            <div class="social-plan-filters">
-              <label class="social-day-filter-native" aria-hidden="true">
-                <span>Jornada</span>
-                <select id="socialDayFilter" tabindex="-1">
-                  <option value="all">Todas</option>
-                  <option value="2026-10-08" selected>Jueves 8</option>
-                  <option value="2026-10-09">Viernes 9</option>
-                  <option value="2026-10-10">Sábado 10</option>
-                  <option value="unscheduled">Sin fecha</option>
-                </select>
-              </label>
-              <label>
-                <span>Plataforma</span>
-                <select id="socialPlatformFilter"><option value="all">Todas</option></select>
-              </label>
-              <label>
-                <span>Formato</span>
-                <select id="socialFormatFilter"><option value="all">Todos</option></select>
-              </label>
-              <label>
-                <span>Estado</span>
-                <select id="socialStatusFilter"><option value="all">Todos</option></select>
-              </label>
-            </div>
-          </div>
+              <div class="day-palette" id="socialDayPalette"></div>
+              <div class="social-day-operations">
+                <span id="socialPlanCount">— piezas</span>
+                <button class="team-refresh-btn" id="publishingRefreshBtn" type="button">
+                  <span class="refresh-icon" aria-hidden="true">↻</span>
+                  Actualizar
+                </button>
+              </div>
+            </aside>
 
-          <div class="social-plan-list" id="socialPlanList">
-            <div class="social-plan-empty">Cargando Social Media Plan…</div>
+            <div class="social-timeline">
+              <div class="social-filterbar">
+                <div class="social-filterbar-head">
+                  <div>
+                    <span class="livebar-kicker">Filtros</span>
+                    <strong>Publicaciones del día</strong>
+                  </div>
+                  <button class="social-filter-clear" id="socialClearFilters" type="button">Limpiar</button>
+                </div>
+
+                <div class="social-plan-filters">
+                  <label>
+                    <span>Formato</span>
+                    <select id="socialFormatFilter"><option value="all">Todos</option></select>
+                  </label>
+                  <label>
+                    <span>Estado</span>
+                    <select id="socialStatusFilter"><option value="all">Todos</option></select>
+                  </label>
+                  <label>
+                    <span>Plataforma</span>
+                    <select id="socialPlatformFilter"><option value="all">Todas</option></select>
+                  </label>
+                </div>
+              </div>
+
+              <div class="social-timeline-list" id="socialPlanList">
+                <div class="social-plan-empty">Cargando Social Media Plan…</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -690,7 +670,7 @@
   </div>
   <div class="save-toast" id="saveToast" role="status" aria-live="polite"></div>
 
-  <script src="/app.js?v=20261005-social2"></script>
+  <script src="/app.js?v=20261005-social3"></script>
   <script type="text/javascript" async defer src="https://assets.pinterest.com/js/pinit.js"></script>
 </body>
 </html>
