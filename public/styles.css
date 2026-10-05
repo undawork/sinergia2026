@@ -688,3 +688,36 @@ footer{
   .team-syncbar{align-items:flex-start}
   .team-sync-meta{flex-direction:column;align-items:flex-end;gap:6px;text-align:right}
 }
+
+
+/* Official SINERGIA brand assets — exported from the original AI source in Drive */
+.official-symbol-mask{
+  -webkit-mask:url("/brand/logos/sinergia-symbol.svg") center/contain no-repeat;
+  mask:url("/brand/logos/sinergia-symbol.svg") center/contain no-repeat;
+}
+.official-wordmark-mask{
+  -webkit-mask:url("/brand/logos/sinergia-wordmark.svg") center/contain no-repeat;
+  mask:url("/brand/logos/sinergia-wordmark.svg") center/contain no-repeat;
+}
+.brand-symbol-svg{background:linear-gradient(135deg,var(--day-a),var(--day-b))}
+.brand-primary-svg{background:var(--ink)}
+.hero-logo-primary{aspect-ratio:2073.7 / 415.59;background:var(--ink)}
+.hero-symbol-svg{
+  aspect-ratio:573.35 / 393.53;
+  background:linear-gradient(135deg,var(--day-a) 4%,#fff 49%,var(--day-b) 96%);
+}
+.hero-art .primary-stamp{height:auto;object-fit:contain}
+.section-brand{height:auto;object-fit:contain}
+.section-brand-wordmark{width:150px}
+.identity-logo{object-fit:contain}
+.identity-asset{
+  width:min(76%,84px);
+  max-height:72px;
+  object-fit:contain;
+  display:block;
+}
+.identity-asset-small{width:min(48%,48px);max-height:48px}
+.identity-arrow-pair{display:flex;align-items:center;justify-content:center;gap:8px}
+.identity-arrow-pair img{width:36px;height:36px;object-fit:contain}
+.brand-pattern .bp-symbol,.brand-pattern .bp-wordmark{object-fit:contain}
+.footer-logo{height:auto;object-fit:contain}
