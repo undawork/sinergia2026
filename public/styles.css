@@ -2977,3 +2977,123 @@ body[data-current-view="home"] main{
     min-height:calc(100svh - 60px);
   }
 }
+
+
+/* Branded Inspo principles */
+.inspo-principles{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+  padding:18px 0 58px;
+}
+.inspo-principle{
+  position:relative;
+  min-height:230px;
+  padding:28px 22px 22px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:22px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.72),
+      rgba(255,255,255,.34)
+    );
+  transition:
+    transform .22s ease,
+    border-color .22s ease,
+    box-shadow .22s ease,
+    background .22s ease;
+}
+.inspo-principle::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  width:86px;
+  height:3px;
+  border-radius:0 999px 999px 0;
+  background:linear-gradient(90deg,var(--day-a),var(--day-b));
+}
+.inspo-principle::after{
+  content:"";
+  position:absolute;
+  width:138px;
+  height:78px;
+  right:-62px;
+  top:16px;
+  border:1px solid color-mix(in srgb,var(--day-a) 20%,transparent);
+  border-radius:50%;
+  transform:rotate(-18deg);
+  pointer-events:none;
+}
+.inspo-principle:hover{
+  transform:translateY(-3px);
+  border-color:color-mix(in srgb,var(--day-a) 22%,var(--line));
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb,var(--day-a) 3%,#fff),
+      rgba(255,255,255,.46)
+    );
+  box-shadow:0 16px 34px rgba(20,20,30,.055);
+}
+.inspo-principle-number{
+  display:block;
+  position:relative;
+  z-index:1;
+  margin:0 0 28px;
+  font-family:var(--serif);
+  font-size:clamp(48px,4.2vw,72px);
+  line-height:.82;
+  letter-spacing:-.065em;
+  color:var(--day-a);
+}
+.inspo-principle:nth-child(2) .inspo-principle-number{
+  color:#2741ad;
+}
+.inspo-principle:nth-child(3) .inspo-principle-number{
+  color:#a566ff;
+}
+.inspo-principle:nth-child(4) .inspo-principle-number{
+  color:#ff4200;
+}
+.inspo-principle h4{
+  position:relative;
+  z-index:1;
+  margin:auto 0 9px;
+  font-size:16px;
+  line-height:1.15;
+  font-weight:600;
+  letter-spacing:-.025em;
+  color:var(--ink);
+}
+.inspo-principle p{
+  position:relative;
+  z-index:1;
+  margin:0;
+  max-width:31ch;
+  font-size:12px;
+  line-height:1.55;
+  color:var(--muted);
+}
+@media(max-width:980px){
+  .inspo-principles{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media(max-width:560px){
+  .inspo-principles{
+    grid-template-columns:1fr;
+    gap:10px;
+    padding-bottom:42px;
+  }
+  .inspo-principle{
+    min-height:0;
+    padding:24px 20px 20px;
+  }
+  .inspo-principle-number{
+    margin-bottom:20px;
+    font-size:46px;
+  }
+}
