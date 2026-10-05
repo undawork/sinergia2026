@@ -86,20 +86,72 @@ function initials(name){
     .join("");
 }
 
+function isPointOfContact(member){
+  const role = String(member.role || "").toLowerCase();
+  return role.includes("encargado") || role.includes("coordinación") || role.includes("coordinador");
+}
+
 function teamCard(member){
-  const isLead = String(member.role).toLowerCase() === "encargado";
-  const roleLabel = isLead ? "Encargado/a · Fotografía" : "Fotografía";
-  const description = isLead
-    ? "Coordinación y cobertura del equipo de fotografía."
-    : "Integrante del equipo de fotografía.";
+  const contactPoint = isPointOfContact(member);
+  const roleLabel = member.role ? `${member.role} · ${member.area}` : member.area;
+  const description = member.responsibility
+    ? member.responsibility
+    : contactPoint
+      ? `Punto de contacto del área de ${member.area}.`
+      : `Integrante del equipo de ${member.area}.`;
+
   return `
-    <article class="team-card ${isLead ? "is-lead" : ""}">
-      <div class="team-avatar">${initials(member.name)}</div>
+    <article class="team-card ${contactPoint ? "is-contact-point" : ""}">
+      <div class="team-card-top">
+        <div class="team-avatar">${initials(member.name)}</div>
+        ${contactPoint ? '<span class="contact-badge"><i></i>Punto de contacto</span>' : ""}
+      </div>
       <h3>${member.name}</h3>
       <div class="team-role">${roleLabel}</div>
       <p>${description}</p>
-      <div class="contact">${member.status === "activo" ? "Activo" : member.status || ""}</div>
+      <div class="contact">${String(member.status).toLowerCase() === "activo" ? "Activo" : member.status || ""}</div>
     </article>`;
+}
+
+function renderTeamGroups(members){
+  const areaOrder = ["Fotografía","Media","Video","RRSS","Diseño"];
+  const grouped = new Map();
+
+  members.forEach(member => {
+    const area = member.area || "Otros";
+    if (!grouped.has(area)) grouped.set(area, []);
+    grouped.get(area).push(member);
+  });
+
+  const orderedAreas = [
+    ...areaOrder.filter(area => grouped.has(area)),
+    ...[...grouped.keys()].filter(area => !areaOrder.includes(area)).sort()
+  ];
+
+  return orderedAreas.map((area, areaIndex) => {
+    const areaMembers = grouped.get(area) || [];
+    const contacts = areaMembers.filter(isPointOfContact);
+    const contactText = contacts.length
+      ? `${contacts.length} ${contacts.length === 1 ? "punto de contacto" : "puntos de contacto"}`
+      : "Sin punto de contacto definido";
+
+    return `
+      <section class="team-area ${areaIndex === 0 ? "is-primary-area" : ""}">
+        <header class="team-area-head">
+          <div>
+            <span class="team-area-index">${String(areaIndex + 1).padStart(2,"0")}</span>
+            <h3>${area}</h3>
+          </div>
+          <div class="team-area-meta">
+            <span>${areaMembers.length} ${areaMembers.length === 1 ? "persona" : "personas"}</span>
+            <span class="${contacts.length ? "has-contact" : ""}">${contactText}</span>
+          </div>
+        </header>
+        <div class="team-grid">
+          ${areaMembers.map(teamCard).join("")}
+        </div>
+      </section>`;
+  }).join("");
 }
 
 function setSyncUI(state, label){
@@ -125,7 +177,7 @@ async function refreshTeamData({manual = false} = {}){
 
     const members = Array.isArray(payload.members)
       ? payload.members
-          .filter(m => String(m.area).toLowerCase() === "fotografía" && String(m.status).toLowerCase() === "activo")
+          .filter(m => String(m.status).toLowerCase() === "activo" && !m.is_placeholder)
           .sort((a,b) => Number(a.display_order || 0) - Number(b.display_order || 0))
       : [];
 
@@ -136,12 +188,13 @@ async function refreshTeamData({manual = false} = {}){
     if (grid && members.length){
       const hash = JSON.stringify(members);
       if (hash !== lastTeamPayloadHash){
-        grid.innerHTML = members.map(teamCard).join("");
+        grid.innerHTML = renderTeamGroups(members);
         lastTeamPayloadHash = hash;
       }
     }
 
-    if (count) count.textContent = `${members.length} integrantes`;
+    const areas = new Set(members.map(member => member.area).filter(Boolean));
+    if (count) count.textContent = `${members.length} integrantes · ${areas.size} áreas`;
     if (syncTime){
       syncTime.textContent = `Última consulta · ${new Intl.DateTimeFormat("es-AR", {
         hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false
