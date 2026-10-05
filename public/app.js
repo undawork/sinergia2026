@@ -1357,15 +1357,78 @@ const navButtons = [...document.querySelectorAll("[data-view]")];
 const views = [...document.querySelectorAll(".view")];
 let selectedDay = 1;
 
-function setView(id){
-  views.forEach(view => view.classList.toggle("is-active", view.id === id));
-  navButtons.forEach(btn => btn.classList.toggle("is-active", btn.dataset.view === id));
-  document.body.dataset.currentView = id;
-  window.scrollTo({top:0,behavior:"smooth"});
+function releaseNavigationLocks(){
+  // Any navigation action should always restore a usable document state.
+  document.body.classList.remove("auth-open","shot-brief-open");
+  document.body.style.removeProperty("overflow");
+  document.documentElement.style.removeProperty("overflow");
+
+  const authModal = document.querySelector("#authModal");
+  if (authModal){
+    authModal.hidden = true;
+    authModal.setAttribute("aria-hidden","true");
+  }
+
+  const shotBriefModal = document.querySelector("#shotBriefModal");
+  if (shotBriefModal){
+    shotBriefModal.hidden = true;
+    shotBriefModal.setAttribute("aria-hidden","true");
+  }
+
+  // Prevent a stale focused control inside a hidden overlay from trapping keyboard/mobile input.
+  const active = document.activeElement;
+  if (active && active !== document.body && typeof active.blur === "function") active.blur();
 }
 
-navButtons.forEach(btn => btn.addEventListener("click", () => setView(btn.dataset.view)));
-document.querySelectorAll("[data-go]").forEach(el => el.addEventListener("click", () => setView(el.dataset.go)));
+function setView(id, {scroll = true} = {}){
+  const target = views.find(view => view.id === id);
+  if (!target) return false;
+
+  releaseNavigationLocks();
+
+  views.forEach(view => {
+    const active = view === target;
+    view.classList.toggle("is-active", active);
+    view.setAttribute("aria-hidden", active ? "false" : "true");
+  });
+
+  navButtons.forEach(btn => {
+    const active = btn.dataset.view === id;
+    btn.classList.toggle("is-active", active);
+    if (active) btn.setAttribute("aria-current","page");
+    else btn.removeAttribute("aria-current");
+  });
+
+  document.body.dataset.currentView = id;
+
+  // This is a SPA-style view switch. Never leave a "#" URL behind.
+  if (window.location.hash){
+    history.replaceState(history.state, "", window.location.pathname + window.location.search);
+  }
+
+  if (scroll) window.scrollTo({top:0,left:0,behavior:"auto"});
+  return true;
+}
+
+function handleInternalNavigation(event){
+  const control = event.currentTarget;
+  const id = control.dataset.view || control.dataset.go;
+  if (!id) return;
+
+  // Anchors such as the logo have a fallback href, but normal clicks stay inside the app.
+  if (event.cancelable) event.preventDefault();
+  setView(id);
+}
+
+navButtons.forEach(btn => btn.addEventListener("click", handleInternalNavigation));
+document.querySelectorAll("[data-go]").forEach(el => el.addEventListener("click", handleInternalNavigation));
+
+// Recover gracefully from old/bookmarked "#"-style URLs.
+window.addEventListener("hashchange", () => {
+  if (window.location.hash === "#" || window.location.hash === "#home"){
+    setView("home", {scroll:false});
+  }
+});
 
 function parseClock(value){
   const match = String(value).match(/(\d{1,2}):(\d{2})/);
