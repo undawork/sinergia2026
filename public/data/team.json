@@ -1,0 +1,71 @@
+{
+  "updated_at": "2026-10-05T18:05:06-03:00",
+  "source": "SINERGIA 2026 — CONTENT DATABASE / TEAM",
+  "area": "Fotografía",
+  "members": [
+    {
+      "member_id": "TEAM-FOTO-001",
+      "name": "Jesus Rafael Unda Hernandez",
+      "role": "Encargado",
+      "area": "Fotografía",
+      "status": "activo",
+      "display_order": 400
+    },
+    {
+      "member_id": "TEAM-FOTO-002",
+      "name": "Natalia Hernandez",
+      "role": "Encargado",
+      "area": "Fotografía",
+      "status": "activo",
+      "display_order": 410
+    },
+    {
+      "member_id": "TEAM-FOTO-003",
+      "name": "Berenice Elais Deppeler",
+      "role": "Miembro",
+      "area": "Fotografía",
+      "status": "activo",
+      "display_order": 420
+    },
+    {
+      "member_id": "TEAM-FOTO-004",
+      "name": "Mariana Saavedra",
+      "role": "Miembro",
+      "area": "Fotografía",
+      "status": "activo",
+      "display_order": 430
+    },
+    {
+      "member_id": "TEAM-FOTO-005",
+      "name": "Santiago Bernabé Quinteros",
+      "role": "Miembro",
+      "area": "Fotografía",
+      "status": "activo",
+      "display_order": 440
+    },
+    {
+      "member_id": "TEAM-FOTO-006",
+      "name": "Juan Ignacio Sanchez",
+      "role": "Miembro",
+      "area": "Fotografía",
+      "status": "activo",
+      "display_order": 450
+    },
+    {
+      "member_id": "TEAM-FOTO-007",
+      "name": "Nadia Gonzalez",
+      "role": "Miembro",
+      "area": "Fotografía",
+      "status": "activo",
+      "display_order": 460
+    },
+    {
+      "member_id": "TEAM-FOTO-008",
+      "name": "Cesia Micaela Czayka",
+      "role": "Miembro",
+      "area": "Fotografía",
+      "status": "activo",
+      "display_order": 470
+    }
+  ]
+}
