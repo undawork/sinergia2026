@@ -73,7 +73,14 @@ const schedule = {
 const EVENT_TZ = "America/Argentina/Cordoba";
 const TEAM_DATA_URL = "/data/team.json";
 const PUBLISHING_DATA_URL = "/data/publishing.json";
+const PUBLISHING_API_URL = "/api/publishing";
+const ADMIN_SESSION_KEY = "sinergia-admin-session";
+const PUBLISHING_REFRESH_MS = 10000;
+const SOCIAL_STATUS_OPTIONS = ["Sin comenzar","En producción","En revisión","Aprobado","Listo","Programado","Publicado"];
 let publishingRows = [];
+let adminToken = sessionStorage.getItem(ADMIN_SESSION_KEY) || "";
+let adminSessionActive = false;
+let publishingUpdateInFlight = false;
 let latestTeamMembers = [];
 const TEAM_REFRESH_MS = 10000;
 let lastTeamPayloadHash = "";
@@ -273,6 +280,25 @@ function fillSocialFilter(id, rows, key, fallback){
   if ([...select.options].some(o => o.value === current)) select.value = current;
 }
 
+function socialStatusControl(row, statusValue){
+  const normalized = String(statusValue || "Sin comenzar").toLowerCase();
+  if (!adminSessionActive){
+    return `<span class="social-status-chip" data-status="${escapeHtml(normalized)}">${escapeHtml(statusValue || "Sin comenzar")}</span>`;
+  }
+  const options = SOCIAL_STATUS_OPTIONS.map(option => {
+    const selected = option.toLowerCase() === normalized ? " selected" : "";
+    return `<option value="${escapeHtml(option)}"${selected}>${escapeHtml(option)}</option>`;
+  }).join("");
+  return `
+    <label class="social-status-editor">
+      <span class="sr-only">Estado de ${escapeHtml(row.title || row.publishing_id)}</span>
+      <select class="social-status-select" data-publishing-id="${escapeHtml(row.publishing_id)}" data-status="${escapeHtml(normalized)}" aria-label="Cambiar estado de ${escapeHtml(row.title || row.publishing_id)}">
+        ${options}
+      </select>
+      <small class="social-save-state" data-save-state="${escapeHtml(row.publishing_id)}"></small>
+    </label>`;
+}
+
 function socialFilteredRows(){
   const day = document.querySelector("#socialDayFilter")?.value || "all";
   const platform = document.querySelector("#socialPlatformFilter")?.value || "all";
@@ -314,7 +340,8 @@ function renderSocialPlan(){
   }
 
   list.innerHTML = rows.map(row => {
-    const status = String(row.status || "pendiente").toLowerCase();
+    const statusValue = String(row.status || "Sin comenzar");
+    const status = statusValue.toLowerCase();
     const time = row.deadline_time || row.planned_time || "Hora límite pendiente";
     const rawNote = row.notes || "";
     const isReferenceUrl = /^https?:\/\//i.test(rawNote);
@@ -339,31 +366,200 @@ function renderSocialPlan(){
           <span>Responsable</span>
         </div>
         <div class="social-plan-status">
-          <span class="social-status-chip" data-status="${escapeHtml(status)}">${escapeHtml(status)}</span>
+          ${socialStatusControl(row, statusValue)}
         </div>
       </article>`;
   }).join("");
 }
 
-async function refreshPublishingData(){
-  const button = document.querySelector("#publishingRefreshBtn");
-  button?.classList.add("is-loading");
-  if (button) button.disabled = true;
+async function fetchPublishingPayload(){
   try{
-    const response = await fetch(`${PUBLISHING_DATA_URL}?t=${Date.now()}`, {cache:"no-store"});
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const payload = await response.json();
+    const response = await fetch(`${PUBLISHING_API_URL}?t=${Date.now()}`, {cache:"no-store"});
+    if (response.ok) return await response.json();
+  }catch(error){
+    console.warn("API PUBLISHING no disponible, usando fallback local:", error);
+  }
+  const fallback = await fetch(`${PUBLISHING_DATA_URL}?t=${Date.now()}`, {cache:"no-store"});
+  if (!fallback.ok) throw new Error(`HTTP ${fallback.status}`);
+  return fallback.json();
+}
+
+async function refreshPublishingData({silent = false} = {}){
+  const button = document.querySelector("#publishingRefreshBtn");
+  if (!silent) button?.classList.add("is-loading");
+  if (button && !silent) button.disabled = true;
+  try{
+    const payload = await fetchPublishingPayload();
     publishingRows = Array.isArray(payload.items) ? payload.items : [];
     renderSocialPlan();
   }catch(error){
     console.warn("No se pudo actualizar PUBLISHING:", error);
     const list = document.querySelector("#socialPlanList");
-    if (list) list.innerHTML = '<div class="social-plan-empty">No se pudo cargar el Social Media Plan.</div>';
+    if (list && !publishingRows.length) list.innerHTML = '<div class="social-plan-empty">No se pudo cargar el Social Media Plan.</div>';
   }finally{
-    button?.classList.remove("is-loading");
-    if (button) button.disabled = false;
+    if (!silent) button?.classList.remove("is-loading");
+    if (button && !silent) button.disabled = false;
   }
 }
+
+function setAuthError(message = ""){
+  const error = document.querySelector("#authError");
+  if (error) error.textContent = message;
+}
+
+function showSaveToast(message, tone = "ok"){
+  const toast = document.querySelector("#saveToast");
+  if (!toast) return;
+  toast.textContent = message;
+  toast.dataset.tone = tone;
+  toast.classList.add("is-visible");
+  clearTimeout(showSaveToast.timer);
+  showSaveToast.timer = setTimeout(() => toast.classList.remove("is-visible"), 2200);
+}
+
+function openAuthModal(){
+  const modal = document.querySelector("#authModal");
+  if (!modal) return;
+  modal.hidden = false;
+  modal.setAttribute("aria-hidden","false");
+  document.body.classList.add("auth-open");
+  setAuthError("");
+  setTimeout(() => document.querySelector("#authPassword")?.focus(), 30);
+}
+
+function closeAuthModal(){
+  const modal = document.querySelector("#authModal");
+  if (!modal) return;
+  modal.hidden = true;
+  modal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("auth-open");
+  setAuthError("");
+}
+
+function updateEditModeUI(){
+  document.body.classList.toggle("is-edit-mode", adminSessionActive);
+  const button = document.querySelector("#editModeBtn");
+  const label = document.querySelector("#editModeLabel");
+  if (button){
+    button.classList.toggle("is-active", adminSessionActive);
+    button.setAttribute("aria-label", adminSessionActive ? "Salir del modo edición" : "Ingresar al modo edición");
+  }
+  if (label) label.textContent = adminSessionActive ? "Salir" : "Editar";
+  if (publishingRows.length) renderSocialPlan();
+}
+
+function clearAdminSession({toast = false} = {}){
+  adminToken = "";
+  adminSessionActive = false;
+  sessionStorage.removeItem(ADMIN_SESSION_KEY);
+  updateEditModeUI();
+  if (toast) showSaveToast("Modo edición cerrado");
+}
+
+async function verifyAdminSession(){
+  if (!adminToken){
+    adminSessionActive = false;
+    updateEditModeUI();
+    return false;
+  }
+  try{
+    const response = await fetch("/api/session", {headers:{Authorization:`Bearer ${adminToken}`},cache:"no-store"});
+    if (!response.ok) throw new Error("Sesión inválida");
+    adminSessionActive = true;
+    updateEditModeUI();
+    return true;
+  }catch(error){
+    clearAdminSession();
+    return false;
+  }
+}
+
+async function loginAdmin(username, password){
+  const response = await fetch("/api/login", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({username,password})
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(payload.error || "No se pudo iniciar sesión.");
+  adminToken = payload.token || "";
+  if (!adminToken) throw new Error("El servidor no devolvió una sesión válida.");
+  sessionStorage.setItem(ADMIN_SESSION_KEY, adminToken);
+  adminSessionActive = true;
+  updateEditModeUI();
+}
+
+async function updatePublishingStatus(publishingId, nextStatus, select){
+  if (!adminSessionActive || !adminToken){ openAuthModal(); return; }
+  const row = publishingRows.find(item => item.publishing_id === publishingId);
+  const previousStatus = row?.status || "Sin comenzar";
+  const state = document.querySelector(`[data-save-state="${CSS.escape(publishingId)}"]`);
+  publishingUpdateInFlight = true;
+  if (select) select.disabled = true;
+  if (state) state.textContent = "Guardando…";
+  try{
+    const response = await fetch("/api/publishing/status", {
+      method:"POST",
+      headers:{"Content-Type":"application/json",Authorization:`Bearer ${adminToken}`},
+      body:JSON.stringify({publishing_id:publishingId,status:nextStatus})
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (response.status === 401){
+      clearAdminSession();
+      openAuthModal();
+      throw new Error("La sesión venció. Ingresa nuevamente.");
+    }
+    if (!response.ok) throw new Error(payload.error || "No se pudo guardar el estado.");
+    if (row){
+      row.status = payload.item?.status || nextStatus;
+      row.updated_at = payload.item?.updated_at || "";
+      row.updated_by = payload.item?.updated_by || "sinergia";
+    }
+    renderSocialPlan();
+    showSaveToast("Estado guardado");
+  }catch(error){
+    if (row) row.status = previousStatus;
+    if (select){ select.value = previousStatus; select.disabled = false; }
+    if (state) state.textContent = "Error al guardar";
+    showSaveToast(error.message || "No se pudo guardar","error");
+  }finally{
+    publishingUpdateInFlight = false;
+  }
+}
+
+document.querySelector("#editModeBtn")?.addEventListener("click", () => {
+  if (adminSessionActive) clearAdminSession({toast:true});
+  else openAuthModal();
+});
+document.querySelectorAll("[data-auth-close]").forEach(button => button.addEventListener("click", closeAuthModal));
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && !document.querySelector("#authModal")?.hidden) closeAuthModal();
+});
+document.querySelector("#authForm")?.addEventListener("submit", async event => {
+  event.preventDefault();
+  const submit = document.querySelector("#authSubmitBtn");
+  const username = document.querySelector("#authUsername")?.value.trim() || "";
+  const password = document.querySelector("#authPassword")?.value || "";
+  setAuthError("");
+  if (submit){ submit.disabled = true; submit.textContent = "Ingresando…"; }
+  try{
+    await loginAdmin(username,password);
+    const passwordInput = document.querySelector("#authPassword");
+    if (passwordInput) passwordInput.value = "";
+    closeAuthModal();
+    showSaveToast("Modo edición activado");
+  }catch(error){
+    setAuthError(error.message || "Usuario o contraseña incorrectos.");
+  }finally{
+    if (submit){ submit.disabled = false; submit.textContent = "Ingresar y editar"; }
+  }
+});
+document.querySelector("#socialPlanList")?.addEventListener("change", event => {
+  const select = event.target.closest(".social-status-select");
+  if (!select) return;
+  select.dataset.status = select.value.toLowerCase();
+  updatePublishingStatus(select.dataset.publishingId,select.value,select);
+});
 
 ["#socialDayFilter","#socialPlatformFilter","#socialFormatFilter","#socialStatusFilter"].forEach(selector => {
   document.querySelector(selector)?.addEventListener("change", renderSocialPlan);
@@ -709,4 +905,8 @@ renderDay(selectCurrentDay());
 refreshClockDrivenUI();
 setInterval(refreshClockDrivenUI, 30000);
 startTeamAutoRefresh();
+verifyAdminSession();
 refreshPublishingData();
+setInterval(() => {
+  if (!publishingUpdateInFlight) refreshPublishingData({silent:true});
+}, PUBLISHING_REFRESH_MS);
