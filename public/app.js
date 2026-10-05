@@ -786,6 +786,81 @@ function setShotDay(day, {render = true} = {}){
   if (render) renderShotPlan();
 }
 
+function shotCrewAssignments(crew){
+  return String(crew || "")
+    .split("·")
+    .map(part => part.trim())
+    .filter(Boolean)
+    .map(segment => {
+      let names = segment;
+      let role = "Captura";
+      let note = "";
+
+      const rules = [
+        [/\s+por salas$/i, "Por salas"],
+        [/\s+en CDO$/i, "CDO"],
+        [/\s+Auditorio$/i, "Auditorio"],
+        [/\s+TTL$/i, "Espacio TTL"],
+        [/\s+people$/i, "People"],
+        [/\s+detalles$/i, "Detalles"],
+        [/\s+apoyo$/i, "Apoyo"],
+        [/\s+roaming$/i, "Supervisión · roaming"],
+        [/\s+supervisi[oó]n$/i, "Supervisión"],
+        [/\s+supervisa$/i, "Supervisión"],
+        [/\s+principal$/i, "Principal"],
+        [/\s+secundaria$/i, "Secundaria"]
+      ];
+
+      for (const [pattern, label] of rules){
+        if (pattern.test(names)){
+          names = names.replace(pattern,"").trim();
+          role = label;
+          break;
+        }
+      }
+
+      const returnMatch = names.match(/\b(vuelve(?:\s+a captura)?(?:\s+\d{1,2}:\d{2})?)/i);
+      if (returnMatch){
+        note = returnMatch[1].replace(/^vuelve/i,"Vuelve");
+        names = names.replace(returnMatch[0],"").replace(/\s+/g," ").trim();
+      }
+
+      const people = names
+        .replaceAll("/"," + ")
+        .split("+")
+        .map(name => name.trim())
+        .filter(Boolean);
+
+      return {people, role, note};
+    });
+}
+
+function renderShotCrew(crew){
+  const assignments = shotCrewAssignments(crew);
+  const peopleCount = new Set(assignments.flatMap(item => item.people)).size;
+
+  return `
+    <div class="shot-team-head">
+      <span class="shot-ops-label">Equipo asignado</span>
+      <small>${peopleCount} ${peopleCount === 1 ? "persona" : "personas"}</small>
+    </div>
+    <div class="shot-team-list">
+      ${assignments.map(assignment => {
+        const supervision = assignment.role.toLowerCase().includes("supervisión");
+        return `
+          <div class="shot-team-assignment ${supervision ? "is-supervision" : ""}">
+            <div class="shot-team-avatars" aria-hidden="true">
+              ${assignment.people.map(name => `<span>${escapeHtml(initials(name))}</span>`).join("")}
+            </div>
+            <div class="shot-team-copy">
+              <strong>${assignment.people.map(escapeHtml).join(" + ")}</strong>
+              <span>${escapeHtml(assignment.role)}${assignment.note ? ` · ${escapeHtml(assignment.note)}` : ""}</span>
+            </div>
+          </div>`;
+      }).join("")}
+    </div>`;
+}
+
 function renderShotPlan(){
   const container = document.querySelector("#shotOpsList");
   const shifts = document.querySelector("#shotEditingShifts");
@@ -840,10 +915,9 @@ function renderShotPlan(){
           </div>
         </div>
 
-        <div class="shot-ops-side">
-          <span class="shot-ops-label">Equipo</span>
-          <strong>${escapeHtml(block.crew)}</strong>
-        </div>
+        <aside class="shot-ops-side">
+          ${renderShotCrew(block.crew)}
+        </aside>
       </article>`;
   }).join("");
 }
