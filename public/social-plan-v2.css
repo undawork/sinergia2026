@@ -1373,3 +1373,72 @@ body.shot-brief-open{overflow:hidden}
     font-size:clamp(37px,12vw,50px);
   }
 }
+
+
+/* Shot List mobile trial: time first, content full width below */
+@media(max-width:760px){
+  .shot-ops-item{
+    grid-template-columns:1fr;
+    grid-template-rows:auto auto auto;
+    row-gap:0;
+    column-gap:0;
+    padding:22px 8px 22px 20px;
+  }
+
+  .shot-ops-time{
+    grid-column:1;
+    grid-row:1;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    padding:0 0 13px;
+    margin-bottom:17px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .shot-ops-time strong{
+    font-size:16px;
+    line-height:1.15;
+  }
+
+  .shot-ops-time span{
+    margin-top:0;
+    font-size:9px;
+  }
+
+  .shot-ops-main{
+    grid-column:1;
+    grid-row:2;
+    width:100%;
+    min-width:0;
+  }
+
+  .shot-ops-side{
+    grid-column:1;
+    grid-row:3;
+    width:100%;
+    margin-top:16px;
+    padding:14px 0 0;
+    border-top:1px solid var(--line);
+    border-left:0;
+  }
+
+  .shot-capture-list{
+    width:100%;
+  }
+
+  .shot-feeds{
+    grid-template-columns:48px minmax(0,1fr);
+  }
+
+  .shot-block-meta{
+    width:100%;
+  }
+}
+
+@media(max-width:430px){
+  .shot-ops-item{
+    grid-template-columns:1fr;
+    padding-right:4px;
+  }
+}
