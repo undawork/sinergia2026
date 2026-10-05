@@ -277,22 +277,36 @@
 
         <div class="inspo-intro">
           <p class="inspo-quote">Profundidad, movimiento, presencia humana y partes que se encuentran.</p>
-          <p>Esta versión ya incorpora recursos oficiales de <strong>BRAND</strong> en Drive. Las referencias fotográficas y frames específicos se irán sumando a medida que definamos la cobertura.</p>
+          <p>El moodboard visual se alimenta del tablero público de Pinterest de SINERGIA 26. Los nuevos Pins que se sumen al tablero quedan disponibles como referencia para el equipo sin duplicar archivos.</p>
         </div>
 
-        <div class="inspo-board" aria-label="Moodboard de dirección visual">
-          <article class="inspo-tile gradient-a"><span class="tile-label">Color fields · contraste</span></article>
-          <article class="inspo-tile blur-people"><span class="tile-label">Human connection · blur</span></article>
-          <article class="inspo-tile light-field"><span class="tile-label">Gradientes + luz · escenario</span></article>
-          <article class="inspo-tile editorial">
-            <small>Typography-led identity</small>
-            <strong>Un cuerpo.<br>Un propósito.<br>Una misión.</strong>
-            <span class="tile-label">Editorial / mensaje</span>
-          </article>
-          <article class="inspo-tile material"><span class="tile-label">Capas · refracción · materialidad</span></article>
-          <article class="inspo-tile duotone"><span class="tile-label">Duotono · siluetas</span></article>
-          <article class="inspo-tile bw"><span class="tile-label">Comunidad · gesto · contraste</span></article>
-        </div>
+        <section class="pinterest-moodboard" aria-labelledby="pinterestMoodboardTitle">
+          <div class="pinterest-moodboard-head">
+            <div>
+              <span class="eyebrow">Pinterest · referencia viva</span>
+              <h3 id="pinterestMoodboardTitle">Moodboard</h3>
+              <p>Referencias visuales seleccionadas para SINERGIA 26: atmósfera, encuadre, movimiento, color, luz y lenguaje fotográfico.</p>
+            </div>
+            <a class="pinterest-board-link" href="https://www.pinterest.com/capturedbynatalia/sinergia-26/" target="_blank" rel="noopener noreferrer">
+              <span>Ver tablero completo</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+          <div class="pinterest-moodboard-frame">
+            <a
+              data-pin-do="embedBoard"
+              data-pin-scale-height="560"
+              data-pin-scale-width="140"
+              href="https://www.pinterest.com/capturedbynatalia/sinergia-26/"
+            ></a>
+          </div>
+
+          <div class="pinterest-moodboard-note">
+            <span class="pinterest-live-dot" aria-hidden="true"></span>
+            <span>Fuente viva · el contenido se carga directamente desde el tablero público.</span>
+          </div>
+        </section>
 
         <div class="inspo-principles">
           <article class="inspo-principle"><span>01</span><h4>Encuentro humano</h4><p>Buscar gestos, vínculos y comunidad antes que poses aisladas.</p></article>
@@ -416,5 +430,6 @@
   </nav>
 
   <script src="/app.js"></script>
+  <script type="text/javascript" async defer src="https://assets.pinterest.com/js/pinit.js"></script>
 </body>
 </html>
