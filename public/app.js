@@ -78,6 +78,7 @@ const ADMIN_SESSION_KEY = "sinergia-admin-session";
 const PUBLISHING_REFRESH_MS = 10000;
 const SOCIAL_STATUS_OPTIONS = ["Sin comenzar","En producción","En revisión","Aprobado","Listo","Programado","Publicado"];
 let publishingRows = [];
+let selectedSocialDay = "2026-10-08";
 let adminToken = sessionStorage.getItem(ADMIN_SESSION_KEY) || "";
 let adminSessionActive = false;
 let publishingUpdateInFlight = false;
@@ -241,7 +242,13 @@ const agendaPanels = [...document.querySelectorAll("[data-agenda-panel]")];
 function setAgendaTab(tab){
   agendaTabButtons.forEach(btn => btn.classList.toggle("is-active", btn.dataset.agendaTab === tab));
   agendaPanels.forEach(panel => panel.classList.toggle("is-active", panel.dataset.agendaPanel === tab));
-  if (tab === "social" && !publishingRows.length) refreshPublishingData();
+  if (tab === "social"){
+    setSocialDay(schedule[selectedDay]?.date || selectedSocialDay, {render:false});
+    if (!publishingRows.length) refreshPublishingData();
+    else renderSocialPlan();
+  } else {
+    document.body.dataset.day = selectedDay;
+  }
 }
 
 agendaTabButtons.forEach(btn => btn.addEventListener("click", () => setAgendaTab(btn.dataset.agendaTab)));
@@ -284,6 +291,33 @@ function socialDayMeta(date){
     name:socialDateLabel(date),
     concept:"Publicaciones"
   };
+}
+
+function socialDayNumber(date){
+  return {"2026-10-08":1,"2026-10-09":2,"2026-10-10":3}[date] || 1;
+}
+
+function setSocialDay(date, {render = true} = {}){
+  if (!SOCIAL_DAY_META[date]) return;
+  selectedSocialDay = date;
+  const dayNumber = socialDayNumber(date);
+  const meta = socialDayMeta(date);
+  document.body.dataset.day = dayNumber;
+
+  document.querySelectorAll("[data-social-day]").forEach(button => {
+    button.classList.toggle("is-active", button.dataset.socialDay === date);
+  });
+
+  const number = document.querySelector("#socialDayNumber");
+  const name = document.querySelector("#socialDayName");
+  const concept = document.querySelector("#socialDayConcept");
+  const palette = document.querySelector("#socialDayPalette");
+  if (number) number.textContent = meta.index;
+  if (name) name.textContent = meta.name;
+  if (concept) concept.textContent = meta.concept;
+  if (palette) palette.innerHTML = schedule[dayNumber].palette.map(color => `<span style="background:${color}"></span>`).join("");
+
+  if (render && publishingRows.length) renderSocialPlan();
 }
 
 function socialFormatKind(format){
@@ -348,15 +382,12 @@ function socialStatusControl(row, statusValue){
 }
 
 function socialFilteredRows(){
-  const day = document.querySelector("#socialDayFilter")?.value || "all";
   const platform = document.querySelector("#socialPlatformFilter")?.value || "all";
   const format = document.querySelector("#socialFormatFilter")?.value || "all";
   const status = document.querySelector("#socialStatusFilter")?.value || "all";
 
   return publishingRows.filter(row => {
-    const dayOk = day === "all"
-      || (day === "unscheduled" ? !row.planned_date : row.planned_date === day);
-    return dayOk
+    return row.planned_date === selectedSocialDay
       && (platform === "all" || row.platform === platform)
       && (format === "all" || row.format === format)
       && (status === "all" || row.status === status);
@@ -367,24 +398,15 @@ function renderSocialPlan(){
   const list = document.querySelector("#socialPlanList");
   if (!list) return;
 
-  fillSocialFilter("#socialPlatformFilter", publishingRows, "platform", "Todas");
-  fillSocialFilter("#socialFormatFilter", publishingRows, "format", "Todos");
-  fillSocialFilter("#socialStatusFilter", publishingRows, "status", "Todos");
+  const dayRows = publishingRows.filter(row => row.planned_date === selectedSocialDay);
+  fillSocialFilter("#socialPlatformFilter", dayRows, "platform", "Todas");
+  fillSocialFilter("#socialFormatFilter", dayRows, "format", "Todos");
+  fillSocialFilter("#socialStatusFilter", dayRows, "status", "Todos");
 
-  const total = publishingRows.length;
-  const ready = publishingRows.filter(r => ["listo","programado"].includes(String(r.status).toLowerCase())).length;
-  const published = publishingRows.filter(r => String(r.status).toLowerCase() === "publicado").length;
-  const pending = publishingRows.filter(r => ["placeholder","borrador","sin comenzar",""].includes(String(r.status || "").toLowerCase())).length;
-  document.querySelector("#socialKpiTotal").textContent = total;
-  document.querySelector("#socialKpiReady").textContent = ready;
-  document.querySelector("#socialKpiPublished").textContent = published;
-  document.querySelector("#socialKpiPending").textContent = pending;
-  document.querySelector("#socialPlanCount").textContent = `${total} ${total === 1 ? "pieza" : "piezas"}`;
+  setSocialDay(selectedSocialDay, {render:false});
 
-  const selectedDay = document.querySelector("#socialDayFilter")?.value || "2026-10-08";
-  document.querySelectorAll("[data-social-day]").forEach(button => {
-    button.classList.toggle("is-active", button.dataset.socialDay === selectedDay);
-  });
+  const count = document.querySelector("#socialPlanCount");
+  if (count) count.textContent = `${dayRows.length} ${dayRows.length === 1 ? "pieza" : "piezas"}`;
 
   const rows = socialSortRows(socialFilteredRows());
   if (!rows.length){
@@ -392,73 +414,47 @@ function renderSocialPlan(){
     return;
   }
 
-  const groups = new Map();
-  rows.forEach(row => {
-    const key = row.planned_date || "unscheduled";
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key).push(row);
-  });
-
-  list.innerHTML = [...groups.entries()].map(([date, dayRows]) => {
-    const day = socialDayMeta(date);
-    const cards = dayRows.map(row => {
-      const statusValue = String(row.status || "Sin comenzar");
-      const time = row.deadline_time || row.planned_time || "—";
-      const rawNote = row.notes || "";
-      const isReferenceUrl = /^https?:\/\//i.test(rawNote);
-      const noteMarkup = isReferenceUrl
-        ? `Referencia visual disponible. <a href="${escapeHtml(rawNote)}" target="_blank" rel="noopener noreferrer">Ver referencia ↗</a>`
-        : escapeHtml(rawNote || row.copy_text || "Sin notas adicionales.");
-      const formatLabel = row.format || "Sin formato";
-      const formatKind = socialFormatKind(formatLabel);
-      const aspectRatio = socialAspectRatio(formatLabel);
-
-      return `
-        <article class="social-plan-item ${row.is_placeholder ? "is-placeholder" : ""}" data-format-kind="${formatKind}">
-          <div class="social-card-top">
-            <span class="social-format-badge">${escapeHtml(formatLabel)}</span>
-            <div class="social-card-deadline">
-              <span>Entrega</span>
-              <strong>${escapeHtml(time)}</strong>
-            </div>
-          </div>
-
-          <div class="social-plan-main">
-            <h4>${escapeHtml(row.title || "Pieza sin título")}</h4>
-            <p>${noteMarkup}</p>
-            <div class="social-plan-tags">
-              ${row.platform ? `<span>${escapeHtml(row.platform)}</span>` : ""}
-              ${aspectRatio ? `<span>Ratio ${escapeHtml(aspectRatio)}</span>` : ""}
-              ${row.schedule_id ? `<span>${escapeHtml(row.schedule_id)}</span>` : ""}
-            </div>
-          </div>
-
-          <div class="social-card-footer">
-            <div class="social-plan-owner">
-              <strong>${escapeHtml(socialOwnerName(row.owner_id))}</strong>
-              <span>Responsable</span>
-            </div>
-            <div class="social-plan-status">
-              ${socialStatusControl(row, statusValue)}
-            </div>
-          </div>
-        </article>`;
-    }).join("");
+  list.innerHTML = rows.map(row => {
+    const statusValue = String(row.status || "Sin comenzar");
+    const time = row.deadline_time || row.planned_time || "—";
+    const rawNote = row.notes || "";
+    const isReferenceUrl = /^https?:\/\//i.test(rawNote);
+    const noteMarkup = isReferenceUrl
+      ? `Referencia visual disponible · <a href="${escapeHtml(rawNote)}" target="_blank" rel="noopener noreferrer">Ver referencia ↗</a>`
+      : escapeHtml(rawNote || row.copy_text || "Sin notas adicionales.");
+    const formatLabel = row.format || "Sin formato";
+    const formatKind = socialFormatKind(formatLabel);
 
     return `
-      <section class="social-day-group" data-social-date="${escapeHtml(date)}">
-        <aside class="social-day-overview">
-          <div class="social-day-number">${day.index}</div>
-          <div>
-            <div class="social-day-name">${escapeHtml(day.name)}</div>
-            <div class="social-day-concept">${escapeHtml(day.concept)}</div>
-          </div>
-          <span class="social-day-count">${dayRows.length} ${dayRows.length === 1 ? "pieza" : "piezas"}</span>
-        </aside>
-        <div class="social-day-cards">
-          ${cards}
+      <article class="social-timeline-item ${row.is_placeholder ? "is-placeholder" : ""}" data-format-kind="${formatKind}">
+        <div class="social-timeline-time">
+          <strong>${escapeHtml(time)}</strong>
+          <span>Entrega</span>
         </div>
-      </section>`;
+
+        <div class="social-timeline-main">
+          <div class="social-timeline-title-line">
+            <h4>${escapeHtml(row.title || "Pieza sin título")}</h4>
+            <span class="social-format-badge">${escapeHtml(formatLabel)}</span>
+          </div>
+          <p>${noteMarkup}</p>
+          ${row.platform || row.schedule_id ? `
+            <div class="social-plan-tags">
+              ${row.platform ? `<span>${escapeHtml(row.platform)}</span>` : ""}
+              ${row.schedule_id ? `<span>${escapeHtml(row.schedule_id)}</span>` : ""}
+            </div>` : ""}
+        </div>
+
+        <div class="social-timeline-side">
+          <div class="social-plan-owner">
+            <strong>${escapeHtml(socialOwnerName(row.owner_id))}</strong>
+            <span>Responsable</span>
+          </div>
+          <div class="social-plan-status">
+            ${socialStatusControl(row, statusValue)}
+          </div>
+        </div>
+      </article>`;
   }).join("");
 }
 
@@ -651,17 +647,12 @@ document.querySelector("#socialPlanList")?.addEventListener("change", event => {
   updatePublishingStatus(select.dataset.publishingId,select.value,select);
 });
 
-["#socialDayFilter","#socialPlatformFilter","#socialFormatFilter","#socialStatusFilter"].forEach(selector => {
+["#socialPlatformFilter","#socialFormatFilter","#socialStatusFilter"].forEach(selector => {
   document.querySelector(selector)?.addEventListener("change", renderSocialPlan);
 });
 
 document.querySelectorAll("[data-social-day]").forEach(button => {
-  button.addEventListener("click", () => {
-    const select = document.querySelector("#socialDayFilter");
-    if (!select) return;
-    select.value = button.dataset.socialDay || "all";
-    renderSocialPlan();
-  });
+  button.addEventListener("click", () => setSocialDay(button.dataset.socialDay));
 });
 
 document.querySelector("#socialClearFilters")?.addEventListener("click", () => {
@@ -865,7 +856,7 @@ function renderDay(day){
   selectedDay = day;
   const data = schedule[day];
   document.body.dataset.day = day;
-  document.querySelectorAll(".day-btn").forEach(btn => btn.classList.toggle("is-active", Number(btn.dataset.day) === Number(day)));
+  document.querySelectorAll("[data-day]").forEach(btn => btn.classList.toggle("is-active", Number(btn.dataset.day) === Number(day)));
   document.querySelector("#dayNumber").textContent = String(day).padStart(2,"0");
   document.querySelector("#dayName").textContent = data.day;
   document.querySelector("#dayConcept").textContent = data.concept;
@@ -901,7 +892,7 @@ function renderDay(day){
   refreshTimelineLiveState();
 }
 
-document.querySelectorAll(".day-btn").forEach(btn => btn.addEventListener("click", () => renderDay(Number(btn.dataset.day))));
+document.querySelectorAll("[data-day]").forEach(btn => btn.addEventListener("click", () => renderDay(Number(btn.dataset.day))));
 
 function refreshTimelineLiveState(){
   const now = argentinaNow();
