@@ -860,6 +860,170 @@ function renderShotCrew(crew){
     </div>`;
 }
 
+const SHOT_DAY_INTENT = {
+  1: {
+    label:"Distinción",
+    line:"Mostrar que SINERGIA tiene una identidad propia: intención, carácter, belleza y detalles que hacen que este encuentro se sienta distinto."
+  },
+  2: {
+    label:"Encuentro",
+    line:"Priorizar vínculos reales. La imagen tiene que hacer sentir que las personas no solo asistieron: se encontraron, compartieron y fueron parte."
+  },
+  3: {
+    label:"Integración",
+    line:"Contar cómo muchas partes distintas funcionan como un solo cuerpo: escenario, servidores, comunidad, oración, talleres y espacios conectados."
+  }
+};
+
+function shotBriefProfile(block){
+  const event = String(block.event || "").toLowerCase();
+
+  if (event.includes("acreditación") || event.includes("llegadas")){
+    return {
+      intent:"Contar el primer encuentro con SINERGIA: expectativa, bienvenida y energía de llegada.",
+      visual:["Mezclar generales que ubiquen + medios de interacción + detalles de credenciales y manos.","Buscar capas con señalética, branding o gente entrando en primer plano.","Priorizar verticales limpios y secuencias que funcionen como apertura de historia."],
+      moments:["Primer saludo entre personas.","Entrega de credencial o pulsera.","Grupos llegando juntos y reacción al entrar.","Servidores recibiendo y orientando."],
+      avoid:["Filas sin contexto que parezcan trámite.","Personas aisladas mirando a cámara salvo que sea intencional.","Fondos vacíos o desordenados que no sitúen el evento."]
+    };
+  }
+
+  if (event.includes("espacio ttl") || event.includes("almuerzo") || event.includes("servidores")){
+    return {
+      intent:"Mostrar comunidad fuera del escenario: conversación, servicio, marcas, descanso y vida compartida.",
+      visual:["Trabajar escenas con varias capas y personas interactuando.","Alternar planos de ambiente con detalles de mesas, productos, manos y branding.","Buscar fotos que se sientan vivas, no catálogo de stands."],
+      moments:["Conversaciones y risas reales.","Servidores resolviendo, ayudando o preparando.","Interacción con stands y productos.","Retratos/grupos espontáneos durante la pausa."],
+      avoid:["Stands vacíos como única cobertura.","Fotos de comida sin personas o contexto.","Interrumpir conversaciones para forzar poses constantemente."]
+    };
+  }
+
+  if (event.includes("casa de oración") || event.includes("cdo")){
+    return {
+      intent:"Transmitir intimidad, presencia y quietud sin invadir el momento de oración.",
+      visual:["Trabajar a distancia y con lentes largos cuando el momento sea sensible.","Buscar manos, siluetas, grupos pequeños, luz y espacio negativo.","Usar capas, puertas o elementos arquitectónicos para dar profundidad."],
+      moments:["Personas orando juntas.","Silencio, espera y concentración.","Detalles de Biblias, manos y rostros en contexto.","Transiciones de gente entrando o saliendo del espacio."],
+      avoid:["Primerísimos planos vulnerables sin necesidad.","Flash o intervenciones que rompan la atmósfera.","Convertir un momento íntimo en una escena posada."]
+    };
+  }
+
+  if (event.includes("worship") || event.includes("adoración")){
+    return {
+      intent:"Hacer sentir la energía del worship y, al mismo tiempo, la respuesta humana de la sala.",
+      visual:["Construir secuencia: wide de sala → músicos → people worship → detalle.","Buscar diagonales de luces, manos, instrumentos y pantallas para crear capas.","Capturar vertical y horizontal; cuidar especialmente fondos detrás de músicos y personas."],
+      moments:["Entrada fuerte de una canción.","Manos levantadas y canto colectivo.","Interacción entre músicos.","Reacciones genuinas de la audiencia."],
+      avoid:["Quedarse toda la canción en el escenario.","Repetir únicamente planos cerrados de cantantes.","Fotografías donde las pantallas corten cabezas o compitan con el sujeto."]
+    };
+  }
+
+  if (event.includes("talleres")){
+    return {
+      intent:"Demostrar simultaneidad y diversidad: varias conversaciones distintas ocurriendo al mismo tiempo dentro de un mismo propósito.",
+      visual:["En cada sala obtener mínimo: general + speaker + audiencia + interacción + detalle.","Mantener una lógica visual similar entre salas para que el carrusel sea coherente.","Priorizar identificación de cada espacio sin depender de texto posterior."],
+      moments:["Speaker interactuando con asistentes.","Preguntas o participación.","Risas, escucha activa y notas.","Detalles propios que diferencien cada taller."],
+      avoid:["Salir de una sala sin un plano general claro.","Cubrir demasiado una sala y dejar otra sin backup.","Fotos del speaker sin ninguna evidencia de audiencia."]
+    };
+  }
+
+  if (event.includes("mesa") || event.includes("comunión")){
+    return {
+      intent:"Mostrar unidad, conversación y comunión: distintas voces compartiendo una misma mesa y una misma misión.",
+      visual:["Buscar composiciones de dos o más personas en relación.","Combinar mesa completa con reacciones, manos y detalles.","Usar foregrounds para dar sensación de estar dentro de la conversación."],
+      moments:["Escucha entre participantes.","Risas o gestos compartidos.","Comunión, manos y elementos de mesa.","Reacción del auditorio a lo que sucede."],
+      avoid:["Serie completa de retratos individuales sin interacción.","Ángulos donde micrófonos u objetos tapen rostros.","Perder el contexto de mesa y comunidad."]
+    };
+  }
+
+  if (event.includes("ministración") || event.includes("cierre")){
+    return {
+      intent:"Cerrar la historia desde la emoción y la respuesta de las personas, con sensibilidad y respeto.",
+      visual:["Trabajar desde periferia antes de acercarse.","Alternar generales emocionales con gestos y detalles discretos.","Buscar servidores acompañando, abrazos y capas de personas."],
+      moments:["Oración y acompañamiento.","Abrazos después de la ministración.","Últimas canciones o palabras.","Sala respirando después del momento fuerte."],
+      avoid:["Exponer vulnerabilidad de forma invasiva.","Fotografiar demasiado cerca a alguien llorando.","Convertir la ministración en una búsqueda agresiva de impacto."]
+    };
+  }
+
+  if (event.includes("apertura")){
+    return {
+      intent:"Mostrar transición: el espacio vacío cobra vida y la expectativa se convierte en encuentro.",
+      visual:["Antes/después: auditorio preparado y luego entrando gente.","Puertas, señalética, primeros pasos y primeros planos de sala.","Usar simetría y escala para mostrar magnitud."],
+      moments:["Apertura literal de puertas.","Primeras filas ocupándose.","Equipo terminando detalles.","Primer wide con audiencia entrando."],
+      avoid:["Solo fotografiar el lugar vacío.","Perder la transformación entre montaje y público.","Encuadres inclinados o desprolijos en arquitecturas."]
+    };
+  }
+
+  // Speakers / plenaries are the default for named sessions.
+  return {
+    intent:"Construir una historia del mensaje: presencia del orador, contenido, reacción de la audiencia y escala del momento.",
+    visual:["Asegurar frontal, perfil, plano medio, cerrado y wide con escenario.","Buscar gestos limpios y expresiones fuertes, dejando aire para uso editorial.","Intercalar audiencia escuchando para que el mensaje tenga contrapunto humano."],
+    moments:["Gestos o frases de énfasis.","Pausa / escucha del auditorio.","Interacción con escenario o pantalla.","Respuesta emocional o colectiva de la sala."],
+    avoid:["Cien variaciones del mismo ángulo.","Micrófonos tapando boca u ojos cuando se pueda anticipar.","Pantallas con expresiones poco favorecedoras detrás del speaker."]
+  };
+}
+
+function shotBriefListHtml(items){
+  return (items || []).map(item => `<li>${escapeHtml(item)}</li>`).join("");
+}
+
+function openShotBrief(day, index){
+  const plan = shotPlan[day];
+  const block = plan?.blocks?.[index];
+  const modal = document.querySelector("#shotBriefModal");
+  if (!block || !modal) return;
+
+  const dayIntent = SHOT_DAY_INTENT[day] || SHOT_DAY_INTENT[1];
+  const profile = shotBriefProfile(block);
+  const combinedIntent = `${dayIntent.line} En este bloque: ${profile.intent}`;
+
+  const eyebrow = document.querySelector("#shotBriefEyebrow");
+  const title = document.querySelector("#shotBriefTitle");
+  const meta = document.querySelector("#shotBriefMeta");
+  const intent = document.querySelector("#shotBriefIntent");
+  const must = document.querySelector("#shotBriefMust");
+  const visual = document.querySelector("#shotBriefVisual");
+  const moments = document.querySelector("#shotBriefMoments");
+  const avoid = document.querySelector("#shotBriefAvoid");
+  const feeds = document.querySelector("#shotBriefFeeds");
+  const handoff = document.querySelector("#shotBriefHandoff");
+  const edit = document.querySelector("#shotBriefEdit");
+
+  if (eyebrow) eyebrow.textContent = `SHOT BRIEF · ${schedule[day].day} · ${dayIntent.label}`;
+  if (title) title.textContent = block.event;
+  if (meta) meta.textContent = `${block.time} · ${block.zone} · Prioridad ${block.priority}`;
+  if (intent) intent.textContent = combinedIntent;
+  if (must) must.innerHTML = shotBriefListHtml(block.capture);
+  if (visual) visual.innerHTML = shotBriefListHtml(profile.visual);
+  if (moments) moments.innerHTML = shotBriefListHtml(profile.moments);
+  if (avoid) avoid.innerHTML = shotBriefListHtml(profile.avoid);
+  if (feeds) feeds.innerHTML = block.feeds.map(feed => `<span>${escapeHtml(feed)}</span>`).join("");
+  if (handoff) handoff.innerHTML = `<b>Handoff</b> · ${escapeHtml(block.handoff)}`;
+  if (edit) edit.innerHTML = `<b>Edición</b> · ${escapeHtml(block.edit)}`;
+
+  modal.hidden = false;
+  modal.setAttribute("aria-hidden","false");
+  document.body.classList.add("shot-brief-open");
+  setTimeout(() => modal.querySelector(".shot-brief-close")?.focus(), 20);
+}
+
+function closeShotBrief(){
+  const modal = document.querySelector("#shotBriefModal");
+  if (!modal) return;
+  modal.hidden = true;
+  modal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("shot-brief-open");
+}
+
+document.addEventListener("click", event => {
+  const trigger = event.target.closest("[data-shot-brief]");
+  if (trigger){
+    openShotBrief(Number(trigger.dataset.shotBriefDay), Number(trigger.dataset.shotBriefIndex));
+    return;
+  }
+  if (event.target.closest("[data-shot-brief-close]")) closeShotBrief();
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && !document.querySelector("#shotBriefModal")?.hidden) closeShotBrief();
+});
+
 function renderShotPlan(){
   const container = document.querySelector("#shotOpsList");
   const shifts = document.querySelector("#shotEditingShifts");
@@ -890,10 +1054,14 @@ function renderShotPlan(){
         <div class="shot-ops-main">
           <div class="shot-ops-title">
             <span class="shot-ops-index">${String(index + 1).padStart(2,"0")}</span>
-            <div>
+            <div class="shot-ops-title-copy">
               <h4>${escapeHtml(block.event)}</h4>
               <small>${escapeHtml(block.zone)}</small>
             </div>
+            <button class="shot-brief-trigger" type="button" data-shot-brief data-shot-brief-day="${selectedShotDay}" data-shot-brief-index="${index}">
+              Ver brief
+              <span aria-hidden="true">↗</span>
+            </button>
           </div>
 
           <div class="shot-capture-block">
