@@ -1053,7 +1053,9 @@ function refreshClockDrivenUI(){
   }
 }
 
-renderDay(selectCurrentDay());
+const initialAgendaDay = selectCurrentDay();
+renderDay(initialAgendaDay);
+setSocialDay(schedule[initialAgendaDay].date, {render:false});
 refreshClockDrivenUI();
 setInterval(refreshClockDrivenUI, 30000);
 startTeamAutoRefresh();
