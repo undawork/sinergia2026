@@ -2461,3 +2461,61 @@ body.auth-open{overflow:hidden}
     margin-top:1px;
   }
 }
+
+
+/* Live resource actions */
+.resource-card.resource-card-live{
+  border-style:solid;
+}
+.resource-card.resource-card-live .resource-icon{
+  background:color-mix(in srgb,var(--day-a) 8%,#fff);
+  color:var(--day-a);
+}
+.resource-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:auto;
+  padding-top:28px;
+  flex-wrap:wrap;
+}
+.resource-action{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:34px;
+  padding:8px 11px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:500;
+  line-height:1;
+  white-space:nowrap;
+  transition:.2s ease;
+}
+.resource-action-primary{
+  background:var(--day-a);
+  color:#fff;
+  border:1px solid var(--day-a);
+}
+.resource-action-secondary{
+  background:#fff;
+  color:var(--ink);
+  border:1px solid var(--line);
+}
+.resource-action:hover{
+  transform:translateY(-1px);
+}
+.resource-action-primary:hover{
+  box-shadow:0 8px 20px color-mix(in srgb,var(--day-a) 18%,transparent);
+}
+.resource-action-secondary:hover{
+  border-color:var(--line-strong);
+}
+@media(max-width:560px){
+  .resource-actions{
+    gap:7px;
+  }
+  .resource-action{
+    flex:1 1 auto;
+  }
+}
