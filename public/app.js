@@ -70,6 +70,305 @@ const schedule = {
   }
 };
 
+const shotPlan = {
+  1: {
+    editing: [
+      ["13:00–16:30","Mica","Ingest + PREVIA / primeras selecciones"],
+      ["16:30–20:00","Berenice","Apertura + people + worship · Mariana cubre su zona"],
+      ["20:00–23:00","Mica","Asher + cierre + selects del día"],
+      ["22:30–01:00","Santiago","RECAP post-captura · Mica backup"]
+    ],
+    blocks: [
+      {
+        time:"13:00–14:30",
+        event:"Acreditación + llegadas",
+        zone:"Accesos / Exteriores",
+        priority:"Crítica",
+        capture:["Llegadas y saludos","Credenciales / pulseras / manos","General + medio + detalle","Clips verticales 9:16","Grupos y expectativa"],
+        feeds:["PREVIA Y ACREDITACIÓN · REEL 9:16"],
+        crew:"Berenice + Mariana · Jesús roaming",
+        handoff:"Primer handoff 14:15 → Mica · entrega 16:00",
+        edit:"Mica · turno 13:00–16:30"
+      },
+      {
+        time:"14:30–16:00",
+        event:"Espacio TTL + exteriores",
+        zone:"Espacio TTL / gastronómico / circulación",
+        priority:"Alta",
+        capture:["Stands + branding","Interacción real","Comida / mesas / circulación","Fotos grupales","Vertical + 4:5"],
+        feeds:["LLEGADA, APERTURA, WORSHIP · CARRUSEL 4:5","RECAP · banco de recursos"],
+        crew:"Berenice + Mariana · Jesús supervisa",
+        handoff:"Selección exterior antes de 16:30",
+        edit:"Mica continúa · Berenice entra a edición 16:30"
+      },
+      {
+        time:"15:45–18:00",
+        event:"CDO + apertura Auditorio",
+        zone:"CDO / Auditorio",
+        priority:"Alta",
+        capture:["Oración y quietud","Personas + manos + detalles","Auditorio vacío / montaje","Puertas abriendo","Primer ingreso de audiencia"],
+        feeds:["LLEGADA, APERTURA, WORSHIP · CARRUSEL","FIN DÍA 1 · archivo"],
+        crew:"Juan + Nadia en CDO · Santiago + Nati Auditorio · Jesús roaming",
+        handoff:"CDO 17:15 · apertura Auditorio 18:00",
+        edit:"Berenice · turno 16:30–20:00"
+      },
+      {
+        time:"18:30–19:30",
+        event:"Adoración",
+        zone:"Auditorio principal",
+        priority:"Crítica",
+        capture:["Músicos individuales + banda","People worship / reacciones","Wide de sala","Manos / instrumentos / pantallas","Clips 9:16 + fotos 4:5"],
+        feeds:["LLEGADA, APERTURA, WORSHIP · CARRUSEL","RECAP · REEL"],
+        crew:"Santiago + Nati · Mariana people · Jesús supervisión",
+        handoff:"Primeras favoritas 19:10",
+        edit:"Berenice recibe worship · Mica backup"
+      },
+      {
+        time:"19:30–20:30",
+        event:"Introducción + Asher / David",
+        zone:"Auditorio principal",
+        priority:"Crítica",
+        capture:["Speaker frontal / perfil","Gestos + manos","Plano medio + cerrado + wide","Reacción de audiencia","Vertical limpio para reel"],
+        feeds:["ASHER · REEL 1:1","FIN DÍA 1 · CARRUSEL","RECAP"],
+        crew:"Santiago principal · Nati secundaria · Jesús roaming",
+        handoff:"Asher selects 20:05 → edición · entrega 20:30",
+        edit:"Berenice hasta 20:00 → Mica toma relevo"
+      },
+      {
+        time:"20:30–22:15",
+        event:"Ministración + cierre",
+        zone:"Auditorio / people",
+        priority:"Crítica",
+        capture:["Altar / oración con respeto","Lágrimas / abrazos / ministración","Servidores trabajando","Planos generales de cierre","Últimos detalles / branding"],
+        feeds:["FIN DÍA 1 · CARRUSEL","RECAP · REEL"],
+        crew:"Santiago + Nati · Juan + Nadia people · Mariana detalles · Jesús supervisa",
+        handoff:"Cierre selects 21:30 y 22:15",
+        edit:"Mica · Santiago entra a RECAP al terminar captura"
+      }
+    ]
+  },
+  2: {
+    editing: [
+      ["07:00–10:30","Mica","Ingest CDO + worship / entrega 11:00"],
+      ["10:30–14:00","Berenice","Mariano + mañana / carrusel 13:00"],
+      ["14:00–17:30","Mica","TTL + preparación talleres"],
+      ["17:30–21:00","Berenice","Talleres + worship + Heidi"],
+      ["22:00–01:00","Santiago","RECAP post-captura · Mica backup"]
+    ],
+    blocks: [
+      {
+        time:"07:00–09:00",
+        event:"Casa de Oración + apertura",
+        zone:"CDO / accesos",
+        priority:"Media",
+        capture:["Oración + grupos","Detalles del espacio","Llegadas tempranas","Silencio / atmósfera","Verticales de recurso"],
+        feeds:["RECAP · banco","TURNO MAÑANA / archivo"],
+        crew:"Juan + Nadia · Jesús roaming",
+        handoff:"CDO selects 08:45",
+        edit:"Mica · turno 07:00–10:30"
+      },
+      {
+        time:"09:00–10:00",
+        event:"Worship mañana",
+        zone:"Auditorio principal",
+        priority:"Crítica",
+        capture:["Banda + cantantes","People worship","Wide + medio + detalle","Clips 16:9 y verticales","Reacciones"],
+        feeds:["WORSHIP · REEL 16:9","PRIMERA PARTE · CARRUSEL"],
+        crew:"Santiago + Nati · Berenice + Mariana people",
+        handoff:"Worship 10:00 → edición · entrega 11:00",
+        edit:"Mica recibe material en vivo"
+      },
+      {
+        time:"10:00–11:15",
+        event:"Mariano Sennewald",
+        zone:"Auditorio principal",
+        priority:"Crítica",
+        capture:["Speaker limpio","Gestos + expresiones","Wide con pantallas","Audiencia escuchando","Vertical / 4:5"],
+        feeds:["MARIANO · REEL 4:5","PRIMERA PARTE · CARRUSEL"],
+        crew:"Santiago + Nati · Jesús roaming",
+        handoff:"Primer selects 10:45 · entrega 11:30",
+        edit:"Mica hasta 10:30 → Berenice releva"
+      },
+      {
+        time:"11:30–13:00",
+        event:"Mesa de Comunión TTL + anuncios",
+        zone:"Auditorio principal",
+        priority:"Alta",
+        capture:["Mesa completa","Interacciones / risas / escucha","Detalles de comunión","General de audiencia","Cierre del turno mañana"],
+        feeds:["PRIMERA PARTE · CARRUSEL FOTOS / CLIPS"],
+        crew:"Santiago + Nati · Mariana people · Jesús supervisa",
+        handoff:"Handoff continuo 12:10–12:40 · entrega 13:00",
+        edit:"Berenice · turno 10:30–14:00"
+      },
+      {
+        time:"13:00–15:45",
+        event:"Almuerzo + Espacio TTL + CDO",
+        zone:"Exteriores / TTL / CDO",
+        priority:"Alta",
+        capture:["Comunidad / mesas / conversaciones","Stands + productos","Activaciones","Retratos / grupos","CDO + detalles"],
+        feeds:["ESPACIO TTL · REEL 9:16","RECAP","SERVIDORES / archivo"],
+        crew:"Mariana + Jesús TTL · Juan + Nadia CDO · Berenice vuelve 14:00",
+        handoff:"TTL selects 15:30",
+        edit:"Mica · turno 14:00–17:30"
+      },
+      {
+        time:"16:00–18:00",
+        event:"Talleres simultáneos",
+        zone:"Salas A+I / Gran Comisión / Iglesia Gloriosa / Evangelio Completo",
+        priority:"Crítica",
+        capture:["1 general por sala","Speaker por sala","Audiencia + interacción","Detalle / branding","Clips cortos verticales"],
+        feeds:["TALLERES · CARRUSEL FOTOS / CLIPS"],
+        crew:"Santiago + Nati + Berenice + Jesús por salas · Juan/Nadia apoyo · Mariana people",
+        handoff:"Cada sala envía selección antes de 17:20 · entrega 18:00",
+        edit:"Mica hasta 17:30 → Berenice entra a edición"
+      },
+      {
+        time:"18:30–20:00",
+        event:"Puertas + Worship noche",
+        zone:"Auditorio principal",
+        priority:"Crítica",
+        capture:["Entrada + expectativa","Banda / músicos","People worship","Wide + crowd","Vertical 9:16"],
+        feeds:["WORSHIP · REEL 9:16","FIN VIERNES · CARRUSEL","RECAP"],
+        crew:"Santiago + Nati · Mariana people · Jesús supervisión",
+        handoff:"Worship selects 19:20 · entrega 20:00",
+        edit:"Berenice · turno 17:30–21:00"
+      },
+      {
+        time:"20:00–21:30",
+        event:"Heidi Baker + ministración",
+        zone:"Auditorio principal",
+        priority:"Crítica",
+        capture:["Speaker frontal / perfil","Gestos + emoción","Reacciones","Ministración / altar","Wide de sala"],
+        feeds:["HEIDI · REEL 1:1","FIN VIERNES · CARRUSEL","RECAP"],
+        crew:"Santiago + Nati · Juan/Nadia people · Jesús roaming",
+        handoff:"Heidi selects 20:35 · cierre 21:15",
+        edit:"Berenice hasta 21:00 · Mica backup"
+      },
+      {
+        time:"21:30–22:15",
+        event:"Cierre viernes",
+        zone:"Auditorio / salidas",
+        priority:"Alta",
+        capture:["Cierre + anuncios","Abrazos / salidas","Últimos grupos","Servidores","Plano final de sala"],
+        feeds:["FIN VIERNES · CARRUSEL","RECAP · REEL"],
+        crew:"Berenice vuelve a captura · Santiago + Nati · Jesús supervisa",
+        handoff:"Último handoff 22:15",
+        edit:"Santiago entra 22:00–01:00 para RECAP"
+      }
+    ]
+  },
+  3: {
+    editing: [
+      ["07:00–10:30","Mica","Ingest CDO + worship / Miller"],
+      ["10:30–14:00","Berenice","Miller + Heidi + turno mañana"],
+      ["14:00–17:30","Mica","Servidores + TTL + talleres"],
+      ["17:30–21:00","Berenice","Talleres + worship + Asher"],
+      ["22:30–01:30","Santiago","RECAP final · Mica backup"]
+    ],
+    blocks: [
+      {
+        time:"07:00–09:00",
+        event:"Casa de Oración + apertura",
+        zone:"CDO / accesos",
+        priority:"Media",
+        capture:["Oración + comunidad","Llegadas","Detalles de espacio","Servidores tempranos","Verticales de recurso"],
+        feeds:["RECAP FINAL · banco","SERVIDORES · CARRUSEL"],
+        crew:"Juan + Nadia · Jesús roaming",
+        handoff:"Primer handoff 08:45",
+        edit:"Mica · turno 07:00–10:30"
+      },
+      {
+        time:"09:00–10:00",
+        event:"Worship mañana",
+        zone:"Auditorio principal",
+        priority:"Crítica",
+        capture:["Músicos + banda","People worship","Wide / crowd","Detalles de instrumentos","Vertical + 1:1"],
+        feeds:["WORSHIP · REEL 1:1","TURNO MAÑANA · CARRUSEL"],
+        crew:"Santiago + Nati · Berenice/Mariana people",
+        handoff:"Worship selects 09:50",
+        edit:"Mica recibe material"
+      },
+      {
+        time:"10:00–11:15",
+        event:"Michael Miller",
+        zone:"Auditorio principal",
+        priority:"Crítica",
+        capture:["Speaker cerrado / medio / wide","Gestos","Audiencia","Pantallas / contexto","4:5 limpio"],
+        feeds:["MILLER · REEL 4:5","TURNO MAÑANA · CARRUSEL"],
+        crew:"Santiago + Nati · Jesús roaming",
+        handoff:"Miller selects 10:35 · entrega 11:00",
+        edit:"Mica hasta 10:30 → Berenice releva"
+      },
+      {
+        time:"11:30–13:00",
+        event:"Heidi Baker + anuncios",
+        zone:"Auditorio principal",
+        priority:"Crítica",
+        capture:["Speaker + expresiones","Audiencia / emoción","General sala","Detalles de escenario","Momentos de oración"],
+        feeds:["HEIDI · REEL 9:16","TURNO MAÑANA · CARRUSEL"],
+        crew:"Santiago + Nati · Mariana people · Jesús supervisa",
+        handoff:"Heidi + mañana antes de 12:30 · carrusel 13:00",
+        edit:"Berenice · turno 10:30–14:00"
+      },
+      {
+        time:"13:00–15:45",
+        event:"Almuerzo + servidores + Espacio TTL",
+        zone:"Exteriores / TTL / backstage",
+        priority:"Alta",
+        capture:["Servidores en acción","Hospitalidad / producción","Mesas + comunidad","Stands / merch","Retratos y grupos"],
+        feeds:["SERVIDORES · CARRUSEL FOTOS","RECAP FINAL"],
+        crew:"Berenice vuelve 14:00 + Mariana · Jesús roaming · Juan/Nadia apoyo",
+        handoff:"Servidores selects 16:30 · entrega 19:00",
+        edit:"Mica · turno 14:00–17:30"
+      },
+      {
+        time:"16:00–18:00",
+        event:"Talleres simultáneos",
+        zone:"Salas simultáneas",
+        priority:"Crítica",
+        capture:["General por sala","Speaker por sala","Audiencia + preguntas","Detalles / branding","Clips verticales"],
+        feeds:["TALLERES · CARRUSEL FOTOS / CLIPS"],
+        crew:"Santiago + Nati + Berenice + Jesús por salas · Juan/Nadia apoyo",
+        handoff:"Selección por sala 17:15 · entrega 18:00",
+        edit:"Mica hasta 17:30 → Berenice releva"
+      },
+      {
+        time:"18:30–20:00",
+        event:"Puertas + Worship noche",
+        zone:"Auditorio principal",
+        priority:"Crítica",
+        capture:["Entrada / expectativa","Worship banda","People worship","Wide / crowd","1:1 limpio + vertical"],
+        feeds:["WORSHIP · REEL 1:1","FIN SÁBADO · CARRUSEL","RECAP FINAL"],
+        crew:"Santiago + Nati · Mariana people · Jesús supervisión",
+        handoff:"Worship selects 19:20 · entrega 20:00",
+        edit:"Berenice · turno 17:30–21:00"
+      },
+      {
+        time:"20:00–21:00",
+        event:"Asher Intrater",
+        zone:"Auditorio principal",
+        priority:"Crítica",
+        capture:["Speaker frontal / perfil","Gestos","Audiencia","Wide con escenario","Vertical limpio"],
+        feeds:["ASHER · REEL","FIN SÁBADO · CARRUSEL"],
+        crew:"Santiago + Nati · Jesús roaming",
+        handoff:"Asher selects 20:35 · entrega 21:00",
+        edit:"Berenice recibe selects"
+      },
+      {
+        time:"21:00–22:30",
+        event:"Mesa de comunión + cierre",
+        zone:"Auditorio principal",
+        priority:"Crítica",
+        capture:["Mesa completa","Comunión + interacción","Cierre emocional","Foto final / crowd","Servidores + backstage final"],
+        feeds:["FIN SÁBADO · CARRUSEL","RECAP FINAL · REEL"],
+        crew:"Santiago + Nati · Berenice vuelve 21:00 · Juan/Nadia people · Jesús supervisa",
+        handoff:"Fin sábado 21:35 · cierre final 22:30",
+        edit:"Santiago entra 22:30–01:30 · Mica backup"
+      }
+    ]
+  }
+};
+
 const EVENT_TZ = "America/Argentina/Cordoba";
 const TEAM_DATA_URL = "/data/team.json";
 const PUBLISHING_DATA_URL = "/data/publishing.json";
@@ -79,6 +378,7 @@ const PUBLISHING_REFRESH_MS = 10000;
 const SOCIAL_STATUS_OPTIONS = ["Sin comenzar","En producción","En revisión","Aprobado","Listo","Programado","Publicado"];
 let publishingRows = [];
 let selectedSocialDay = "2026-10-08";
+let selectedShotDay = 1;
 let adminToken = sessionStorage.getItem(ADMIN_SESSION_KEY) || "";
 let adminSessionActive = false;
 let publishingUpdateInFlight = false;
@@ -246,6 +546,9 @@ function setAgendaTab(tab){
     setSocialDay(schedule[selectedDay]?.date || selectedSocialDay, {render:false});
     if (!publishingRows.length) refreshPublishingData();
     else renderSocialPlan();
+  } else if (tab === "shotlist"){
+    setShotDay(socialDayNumber(selectedSocialDay) || selectedDay, {render:false});
+    renderShotPlan();
   } else {
     document.body.dataset.day = selectedDay;
   }
@@ -457,6 +760,96 @@ function renderSocialPlan(){
       </article>`;
   }).join("");
 }
+
+function setShotDay(day, {render = true} = {}){
+  const numericDay = Number(day);
+  if (!shotPlan[numericDay]) return;
+  selectedShotDay = numericDay;
+  const data = schedule[numericDay];
+  document.body.dataset.day = numericDay;
+
+  document.querySelectorAll("[data-shot-day]").forEach(button => {
+    button.classList.toggle("is-active", Number(button.dataset.shotDay) === numericDay);
+  });
+
+  const number = document.querySelector("#shotDayNumber");
+  const name = document.querySelector("#shotDayName");
+  const concept = document.querySelector("#shotDayConcept");
+  const palette = document.querySelector("#shotDayPalette");
+  if (number) number.textContent = String(numericDay).padStart(2,"0");
+  if (name) name.textContent = data.day;
+  if (concept) concept.textContent = data.concept;
+  if (palette) palette.innerHTML = data.palette.map(color => `<span style="background:${color}"></span>`).join("");
+
+  if (render) renderShotPlan();
+}
+
+function renderShotPlan(){
+  const container = document.querySelector("#shotOpsList");
+  const shifts = document.querySelector("#shotEditingShifts");
+  if (!container || !shifts) return;
+
+  const plan = shotPlan[selectedShotDay];
+  const count = document.querySelector("#shotBlockCount");
+  if (count) count.textContent = `${plan.blocks.length} bloques`;
+
+  shifts.innerHTML = plan.editing.map(([time, editor, task]) => `
+    <span class="shot-edit-shift">
+      <strong>${escapeHtml(time)}</strong>
+      <span>${escapeHtml(editor)}</span>
+      <small>${escapeHtml(task)}</small>
+    </span>`
+  ).join("");
+
+  container.innerHTML = plan.blocks.map((block, index) => {
+    const priorityClass = String(block.priority || "").toLowerCase().includes("crítica") ? "is-critical" : "";
+    return `
+      <article class="shot-ops-item ${priorityClass}">
+        <div class="shot-ops-time">
+          <strong>${escapeHtml(block.time)}</strong>
+          <span>${escapeHtml(block.priority)}</span>
+        </div>
+
+        <div class="shot-ops-main">
+          <div class="shot-ops-title">
+            <span class="shot-ops-index">${String(index + 1).padStart(2,"0")}</span>
+            <div>
+              <h4>${escapeHtml(block.event)}</h4>
+              <small>${escapeHtml(block.zone)}</small>
+            </div>
+          </div>
+
+          <div class="shot-capture-list">
+            ${block.capture.map(item => `<span>${escapeHtml(item)}</span>`).join("")}
+          </div>
+
+          <div class="shot-feeds">
+            <span class="shot-ops-label">Alimenta</span>
+            <div>${block.feeds.map(feed => `<strong>${escapeHtml(feed)}</strong>`).join("")}</div>
+          </div>
+        </div>
+
+        <div class="shot-ops-side">
+          <div>
+            <span class="shot-ops-label">Captura</span>
+            <strong>${escapeHtml(block.crew)}</strong>
+          </div>
+          <div>
+            <span class="shot-ops-label">Handoff</span>
+            <strong>${escapeHtml(block.handoff)}</strong>
+          </div>
+          <div class="shot-edit-note">
+            <span class="shot-ops-label">Edición</span>
+            <strong>${escapeHtml(block.edit)}</strong>
+          </div>
+        </div>
+      </article>`;
+  }).join("");
+}
+
+document.querySelectorAll("[data-shot-day]").forEach(button => {
+  button.addEventListener("click", () => setShotDay(Number(button.dataset.shotDay)));
+});
 
 async function fetchPublishingPayload(){
   try{
@@ -1056,6 +1449,8 @@ function refreshClockDrivenUI(){
 const initialAgendaDay = selectCurrentDay();
 renderDay(initialAgendaDay);
 setSocialDay(schedule[initialAgendaDay].date, {render:false});
+setShotDay(initialAgendaDay, {render:false});
+renderShotPlan();
 refreshClockDrivenUI();
 setInterval(refreshClockDrivenUI, 30000);
 startTeamAutoRefresh();
