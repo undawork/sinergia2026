@@ -721,3 +721,158 @@ footer{
 .identity-arrow-pair img{width:36px;height:36px;object-fit:contain}
 .brand-pattern .bp-symbol,.brand-pattern .bp-wordmark{object-fit:contain}
 .footer-logo{height:auto;object-fit:contain}
+
+
+/* Grouped team directory */
+.team-groups{
+  display:flex;
+  flex-direction:column;
+  gap:58px;
+  padding-top:28px;
+}
+.team-area{
+  position:relative;
+}
+.team-area + .team-area{
+  padding-top:44px;
+  border-top:1px solid var(--line);
+}
+.team-area.is-primary-area{
+  padding-bottom:10px;
+}
+.team-area-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:24px;
+  margin-bottom:16px;
+}
+.team-area-head > div:first-child{
+  display:flex;
+  align-items:baseline;
+  gap:12px;
+}
+.team-area-index{
+  font-family:var(--serif);
+  font-size:18px;
+  color:var(--day-a);
+}
+.team-area-head h3{
+  margin:0;
+  font-family:var(--serif);
+  font-size:clamp(30px,3vw,48px);
+  line-height:.95;
+  font-weight:400;
+  letter-spacing:-.04em;
+}
+.team-area-meta{
+  display:flex;
+  gap:14px;
+  align-items:center;
+  color:var(--muted);
+  font-size:10px;
+}
+.team-area-meta span{
+  white-space:nowrap;
+}
+.team-area-meta .has-contact{
+  color:var(--ink);
+}
+.team-area .team-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  padding-top:0;
+}
+.team-card{
+  position:relative;
+  overflow:hidden;
+}
+.team-card-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.team-card.is-contact-point{
+  border-color:color-mix(in srgb,var(--day-a) 38%,var(--line));
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb,var(--day-soft) 32%,#fff),
+      #fff 56%,
+      color-mix(in srgb,var(--day-b) 6%,#fff)
+    );
+  box-shadow:0 14px 38px rgba(22,18,30,.055);
+}
+.team-card.is-contact-point::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:20px;
+  bottom:20px;
+  width:3px;
+  border-radius:999px;
+  background:linear-gradient(180deg,var(--day-a),var(--day-b));
+}
+.team-card.is-contact-point .team-avatar{
+  box-shadow:
+    0 0 0 5px color-mix(in srgb,var(--day-a) 8%,transparent),
+    0 8px 24px color-mix(in srgb,var(--day-a) 15%,transparent);
+}
+.contact-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 8px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb,var(--day-a) 26%,var(--line));
+  background:rgba(255,255,255,.74);
+  color:var(--ink);
+  font-size:8px;
+  font-weight:600;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.contact-badge i{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--day-b);
+  box-shadow:0 0 9px color-mix(in srgb,var(--day-b) 70%,transparent);
+}
+.team-card.is-contact-point .team-role{
+  color:var(--ink);
+  font-weight:600;
+}
+.team-area:not(.is-primary-area) .team-card{
+  min-height:238px;
+}
+.team-area.is-primary-area .team-area-head::after{
+  content:"Equipo de fotografía";
+  margin-left:auto;
+  padding:6px 9px;
+  border-radius:999px;
+  background:var(--ink);
+  color:#fff;
+  font-size:8px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+
+@media(max-width:1180px){
+  .team-area .team-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:900px){
+  .team-area .team-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .team-area-head{align-items:flex-start}
+  .team-area-meta{flex-direction:column;align-items:flex-end;gap:4px}
+  .team-area.is-primary-area .team-area-head::after{display:none}
+}
+@media(max-width:560px){
+  .team-groups{gap:42px}
+  .team-area + .team-area{padding-top:32px}
+  .team-area-head{display:block}
+  .team-area-head > div:first-child{margin-bottom:8px}
+  .team-area-meta{flex-direction:row;align-items:center;justify-content:space-between}
+  .team-area .team-grid{grid-template-columns:1fr}
+  .team-area:not(.is-primary-area) .team-card{min-height:205px}
+}
