@@ -486,3 +486,90 @@
   }
   .social-status-editor{width:100%}
 }
+
+
+/* Agenda typography parity — Cronograma = Social Media Plan */
+.timeline-item{
+  padding-top:19px;
+  padding-bottom:19px;
+}
+.timeline-time{
+  font-size:16px;
+  line-height:1.2;
+  font-weight:500;
+  font-variant-numeric:tabular-nums;
+}
+.timeline-title{
+  font-size:19px;
+  line-height:1.23;
+  font-weight:500;
+  letter-spacing:-.025em;
+}
+.timeline-title small{
+  margin-top:7px;
+  font-size:14px;
+  line-height:1.5;
+  font-weight:400;
+}
+.timeline-role{
+  font-size:13px;
+  line-height:1.45;
+}
+.livebar-kicker{
+  font-size:10px;
+  letter-spacing:.11em;
+}
+.livebar-left strong{
+  font-size:14px;
+  line-height:1.2;
+}
+.live-clock strong{
+  font-size:18px;
+}
+.live-clock span{
+  font-size:9px;
+}
+.now-chip,.next-chip,.past-chip{
+  font-size:9px;
+}
+
+@media(max-width:760px){
+  .timeline-item,
+  .timeline-item.is-current{
+    padding-top:18px;
+    padding-bottom:18px;
+  }
+  .timeline-time{
+    font-size:15px;
+    line-height:1.25;
+  }
+  .timeline-title{
+    font-size:19px;
+    line-height:1.24;
+  }
+  .timeline-title small{
+    margin-top:7px;
+    font-size:15px;
+    line-height:1.52;
+  }
+  .timeline-role{
+    font-size:13px;
+    line-height:1.5;
+  }
+  .livebar-left strong{
+    font-size:16px;
+    line-height:1.25;
+  }
+  .livebar-kicker{
+    font-size:10px;
+  }
+  .live-clock strong{
+    font-size:18px;
+  }
+  .live-clock span{
+    font-size:10px;
+  }
+  .now-chip,.next-chip,.past-chip{
+    font-size:10px;
+  }
+}
