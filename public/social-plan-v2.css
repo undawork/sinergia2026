@@ -961,3 +961,136 @@
     padding-bottom:2px;
   }
 }
+
+
+/* Shot List · clearer team assignment board */
+.shot-ops-item{
+  grid-template-columns:112px minmax(0,1fr) 260px;
+}
+.shot-ops-side{
+  padding:1px 0 0 18px;
+  border-left:1px solid var(--line);
+  text-align:left;
+}
+.shot-team-head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:5px;
+}
+.shot-team-head small{
+  color:var(--muted);
+  font-size:9px;
+  line-height:1;
+}
+.shot-team-list{
+  display:flex;
+  flex-direction:column;
+}
+.shot-team-assignment{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  padding:10px 0;
+  border-top:1px solid var(--line);
+}
+.shot-team-assignment:first-child{
+  border-top:0;
+}
+.shot-team-avatars{
+  display:flex;
+  align-items:center;
+  min-width:30px;
+}
+.shot-team-avatars span{
+  display:grid;
+  place-items:center;
+  width:28px;
+  height:28px;
+  margin-left:-7px;
+  border:1px solid var(--paper);
+  border-radius:50%;
+  background:#ecebe7;
+  color:var(--ink);
+  font-size:9px;
+  font-weight:650;
+  letter-spacing:-.02em;
+}
+.shot-team-avatars span:first-child{
+  margin-left:0;
+}
+.shot-team-copy{
+  min-width:0;
+}
+.shot-team-copy strong{
+  display:block;
+  margin:0;
+  max-width:none;
+  font-size:12.5px;
+  line-height:1.25;
+  font-weight:600;
+}
+.shot-team-copy span{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.25;
+}
+.shot-team-assignment.is-supervision .shot-team-avatars span{
+  border-color:color-mix(in srgb,var(--day-a) 18%,var(--paper));
+  background:color-mix(in srgb,var(--day-a) 7%,#fff);
+  color:var(--day-a);
+}
+.shot-team-assignment.is-supervision .shot-team-copy span{
+  color:var(--day-a);
+}
+
+@media(max-width:1100px){
+  .shot-ops-item{
+    grid-template-columns:94px minmax(0,1fr) 220px;
+  }
+}
+
+@media(max-width:760px){
+  .shot-ops-item{
+    grid-template-columns:70px minmax(0,1fr);
+  }
+  .shot-ops-side{
+    grid-column:2;
+    grid-row:2;
+    padding:13px 0 0;
+    border-top:1px solid var(--line);
+    border-left:0;
+  }
+  .shot-team-head{
+    margin-bottom:3px;
+  }
+  .shot-team-head small{
+    font-size:10px;
+  }
+  .shot-team-assignment{
+    padding:9px 0;
+  }
+  .shot-team-avatars span{
+    width:30px;
+    height:30px;
+    font-size:9px;
+  }
+  .shot-team-copy strong{
+    font-size:13.5px;
+    line-height:1.3;
+  }
+  .shot-team-copy span{
+    font-size:11px;
+    line-height:1.3;
+  }
+}
+
+@media(max-width:430px){
+  .shot-ops-item{
+    grid-template-columns:62px minmax(0,1fr);
+  }
+}
