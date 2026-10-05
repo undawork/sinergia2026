@@ -1,5 +1,6 @@
 const schedule = {
   1: {
+    date: "2026-10-08",
     day: "Jueves 8",
     concept: "Distinción",
     palette: ["#13131e","#0000e5","#ff4200","#eaeaea"],
@@ -17,6 +18,7 @@ const schedule = {
     ]
   },
   2: {
+    date: "2026-10-09",
     day: "Viernes 9",
     concept: "Encuentro",
     palette: ["#00003d","#2741ad","#ff3754","#ffebef"],
@@ -41,6 +43,7 @@ const schedule = {
     ]
   },
   3: {
+    date: "2026-10-10",
     day: "Sábado 10",
     concept: "Integración",
     palette: ["#00009e","#a566ff","#ff6d95","#ffeed7"],
@@ -67,8 +70,10 @@ const schedule = {
   }
 };
 
+const EVENT_TZ = "America/Argentina/Cordoba";
 const navButtons = [...document.querySelectorAll("[data-view]")];
 const views = [...document.querySelectorAll(".view")];
+let selectedDay = 1;
 
 function setView(id){
   views.forEach(view => view.classList.toggle("is-active", view.id === id));
@@ -79,7 +84,129 @@ function setView(id){
 navButtons.forEach(btn => btn.addEventListener("click", () => setView(btn.dataset.view)));
 document.querySelectorAll("[data-go]").forEach(el => el.addEventListener("click", () => setView(el.dataset.go)));
 
+function parseClock(value){
+  const match = String(value).match(/(\d{1,2}):(\d{2})/);
+  if (!match) return null;
+  return Number(match[1]) * 60 + Number(match[2]);
+}
+
+function explicitEnd(value){
+  const parts = String(value).split(/[–-]/);
+  if (parts.length < 2) return null;
+  return parseClock(parts[1]);
+}
+
+function argentinaNow(){
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: EVENT_TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23"
+  }).formatToParts(new Date());
+
+  const values = Object.fromEntries(parts.map(p => [p.type, p.value]));
+  const date = `${values.year}-${values.month}-${values.day}`;
+  const minutes = Number(values.hour) * 60 + Number(values.minute);
+  return {
+    date,
+    minutes,
+    seconds: Number(values.second),
+    clock: `${values.hour}:${values.minute}`
+  };
+}
+
+function getItemWindows(day){
+  const items = schedule[day].items;
+  const starts = items.map(item => parseClock(item[0]));
+
+  return items.map((item, index) => {
+    const start = starts[index];
+    const rangedEnd = explicitEnd(item[0]);
+    const nextStrictStart = starts.find((candidate, candidateIndex) => candidateIndex > index && candidate > start);
+    const end = rangedEnd ?? nextStrictStart ?? Math.min(start + 60, 24 * 60);
+    return {start, end};
+  });
+}
+
+function getDayRelation(day, now){
+  const target = schedule[day].date;
+  if (now.date < target) return "future";
+  if (now.date > target) return "past";
+  return "today";
+}
+
+function getLiveState(day, now = argentinaNow()){
+  const relation = getDayRelation(day, now);
+  const windows = getItemWindows(day);
+  const current = [];
+  let nextIndex = -1;
+
+  if (relation === "today"){
+    windows.forEach((window, index) => {
+      if (now.minutes >= window.start && now.minutes < window.end) current.push(index);
+    });
+    nextIndex = windows.findIndex(window => window.start > now.minutes);
+  } else if (relation === "future"){
+    nextIndex = 0;
+  }
+
+  return {relation, windows, current, nextIndex};
+}
+
+function liveSummary(day, state, now){
+  if (state.relation === "past"){
+    return {
+      label: "Jornada finalizada",
+      title: schedule[day].day,
+      detail: "Cronograma completado",
+      tone: "done"
+    };
+  }
+
+  if (state.relation === "future"){
+    const first = schedule[day].items[0];
+    return {
+      label: "Próximo",
+      title: first[1],
+      detail: `${schedule[day].day} · ${first[0]}`,
+      tone: "next"
+    };
+  }
+
+  if (state.current.length){
+    const titles = state.current.map(index => schedule[day].items[index][1]);
+    return {
+      label: state.current.length > 1 ? `AHORA · ${state.current.length} frentes activos` : "AHORA",
+      title: state.current.length > 1 ? titles[0] : titles[0],
+      detail: state.current.length > 1 ? `+${state.current.length - 1} simultáneo · ${now.clock}` : `${schedule[day].items[state.current[0]][2] || schedule[day].day} · ${now.clock}`,
+      tone: "live"
+    };
+  }
+
+  if (state.nextIndex >= 0){
+    const next = schedule[day].items[state.nextIndex];
+    return {
+      label: "Próximo",
+      title: next[1],
+      detail: `${next[0]} · ${next[2] || schedule[day].day}`,
+      tone: "next"
+    };
+  }
+
+  return {
+    label: "Cierre de jornada",
+    title: schedule[day].day,
+    detail: `Hora local · ${now.clock}`,
+    tone: "done"
+  };
+}
+
 function renderDay(day){
+  selectedDay = day;
   const data = schedule[day];
   document.body.dataset.day = day;
   document.querySelectorAll(".day-btn").forEach(btn => btn.classList.toggle("is-active", Number(btn.dataset.day) === Number(day)));
@@ -87,17 +214,153 @@ function renderDay(day){
   document.querySelector("#dayName").textContent = data.day;
   document.querySelector("#dayConcept").textContent = data.concept;
   document.querySelector("#dayPalette").innerHTML = data.palette.map(c => `<span style="background:${c}"></span>`).join("");
-  document.querySelector("#timeline").innerHTML = data.items.map(item => {
-    const isPlaceholder = item[3] === "placeholder";
-    return `<article class="timeline-item ${isPlaceholder ? "placeholder" : ""}">
-      <div class="timeline-time">${item[0]}</div>
-      <div class="timeline-title">${item[1]}<small>${item[2] || "&nbsp;"}</small></div>
-      <div class="timeline-role">${isPlaceholder ? '<span class="placeholder-tag">Detalle pendiente</span>' : 'Cobertura · por asignar'}</div>
-    </article>`;
-  }).join("");
+
+  document.querySelector("#timeline").innerHTML = `
+    <div class="schedule-livebar" id="scheduleLivebar">
+      <div class="livebar-left">
+        <span class="live-pulse" aria-hidden="true"></span>
+        <div>
+          <span class="livebar-kicker" id="livebarKicker">Sincronizado</span>
+          <strong id="livebarTitle">Calculando cronograma…</strong>
+        </div>
+      </div>
+      <div class="live-clock">
+        <strong id="liveClock">--:--</strong>
+        <span>Argentina</span>
+      </div>
+    </div>
+    <div class="timeline-list">
+      ${data.items.map((item, index) => {
+        const isPlaceholder = item[3] === "placeholder";
+        return `<article class="timeline-item ${isPlaceholder ? "placeholder" : ""}" data-index="${index}">
+          <div class="timeline-time">${item[0]}</div>
+          <div class="timeline-title">${item[1]}<small>${item[2] || "&nbsp;"}</small></div>
+          <div class="timeline-role">${isPlaceholder ? '<span class="placeholder-tag">Detalle pendiente</span>' : 'Cobertura · por asignar'}</div>
+          <div class="timeline-live-meta" aria-hidden="true"></div>
+          <div class="timeline-progress" aria-hidden="true"><span></span></div>
+        </article>`;
+      }).join("")}
+    </div>`;
+
+  refreshTimelineLiveState();
 }
 
 document.querySelectorAll(".day-btn").forEach(btn => btn.addEventListener("click", () => renderDay(Number(btn.dataset.day))));
+
+function refreshTimelineLiveState(){
+  const now = argentinaNow();
+  const state = getLiveState(selectedDay, now);
+  const summary = liveSummary(selectedDay, state, now);
+  const items = [...document.querySelectorAll("#timeline .timeline-item")];
+
+  const livebar = document.querySelector("#scheduleLivebar");
+  const kicker = document.querySelector("#livebarKicker");
+  const title = document.querySelector("#livebarTitle");
+  const clock = document.querySelector("#liveClock");
+
+  if (livebar) livebar.dataset.tone = summary.tone;
+  if (kicker) kicker.textContent = summary.label;
+  if (title) title.textContent = summary.title;
+  if (clock) clock.textContent = now.clock;
+
+  items.forEach((el, index) => {
+    const window = state.windows[index];
+    const isCurrent = state.current.includes(index);
+    const isPast = state.relation === "past" || (state.relation === "today" && now.minutes >= window.end);
+    const isNext = index === state.nextIndex;
+
+    el.classList.toggle("is-current", isCurrent);
+    el.classList.toggle("is-past", isPast && !isCurrent);
+    el.classList.toggle("is-next", isNext && !isCurrent);
+
+    const meta = el.querySelector(".timeline-live-meta");
+    const progress = el.querySelector(".timeline-progress span");
+
+    if (meta){
+      if (isCurrent){
+        meta.innerHTML = '<span class="now-chip"><i></i> AHORA</span>';
+      } else if (isNext){
+        meta.innerHTML = '<span class="next-chip">SIGUE</span>';
+      } else if (isPast){
+        meta.innerHTML = '<span class="past-chip">OK</span>';
+      } else {
+        meta.innerHTML = "";
+      }
+    }
+
+    if (progress){
+      if (isCurrent){
+        const duration = Math.max(window.end - window.start, 1);
+        const pct = Math.min(100, Math.max(0, ((now.minutes + now.seconds / 60 - window.start) / duration) * 100));
+        progress.style.width = `${pct}%`;
+      } else {
+        progress.style.width = "0%";
+      }
+    }
+  });
+}
+
+function getConferenceDayFromDate(date){
+  return Number(Object.keys(schedule).find(day => schedule[day].date === date)) || null;
+}
+
+function nextConferenceItem(now){
+  for (const day of [1,2,3]){
+    if (schedule[day].date < now.date) continue;
+    const windows = getItemWindows(day);
+    for (let i = 0; i < schedule[day].items.length; i++){
+      if (schedule[day].date > now.date || windows[i].start > now.minutes){
+        return {day, index:i};
+      }
+    }
+  }
+  return null;
+}
+
+function refreshHomeLiveState(){
+  const now = argentinaNow();
+  const day = getConferenceDayFromDate(now.date);
+  const label = document.querySelector("#homeNowLabel");
+  const title = document.querySelector("#homeNowTitle");
+  const time = document.querySelector("#homeNowTime");
+  const meta = document.querySelector("#homeNowMeta");
+  if (!label || !title || !time || !meta) return;
+
+  if (day){
+    const state = getLiveState(day, now);
+    const summary = liveSummary(day, state, now);
+    label.textContent = summary.label;
+    title.textContent = summary.title;
+
+    if (state.current.length){
+      const first = schedule[day].items[state.current[0]];
+      time.innerHTML = `<i></i> ${schedule[day].day} · ${now.clock}`;
+      meta.textContent = state.current.length > 1 ? `+${state.current.length - 1} frente simultáneo` : (first[2] || "En curso");
+    } else if (state.nextIndex >= 0){
+      const next = schedule[day].items[state.nextIndex];
+      time.innerHTML = `<i></i> ${schedule[day].day} · ${next[0]}`;
+      meta.textContent = next[2] || "Próximo bloque";
+    } else {
+      time.innerHTML = `<i></i> ${schedule[day].day}`;
+      meta.textContent = "Jornada completada";
+    }
+    return;
+  }
+
+  const next = nextConferenceItem(now);
+  if (next){
+    const item = schedule[next.day].items[next.index];
+    label.textContent = "Próximo hito";
+    title.textContent = item[1];
+    time.innerHTML = `<i></i> ${schedule[next.day].day} · ${item[0]}`;
+    meta.textContent = item[2] || "Cronograma";
+  } else {
+    label.textContent = "SINERGIA 2026";
+    title.textContent = "Conferencia finalizada";
+    time.innerHTML = "<i></i> 08—10 OCT 2026";
+    meta.textContent = "Cronograma completado";
+  }
+}
 
 function updateCountdown(){
   const now = new Date();
@@ -123,14 +386,26 @@ function updateCountdown(){
 }
 
 function selectCurrentDay(){
-  const today = new Date();
-  const month = today.getMonth() + 1;
-  const date = today.getDate();
-  if (month === 10 && date === 9) return 2;
-  if (month === 10 && date >= 10) return 3;
-  return 1;
+  const now = argentinaNow();
+  const current = getConferenceDayFromDate(now.date);
+  if (current) return current;
+  if (now.date < schedule[1].date) return 1;
+  return 3;
+}
+
+function refreshClockDrivenUI(){
+  updateCountdown();
+  refreshHomeLiveState();
+  refreshTimelineLiveState();
+
+  const now = argentinaNow();
+  const currentDay = getConferenceDayFromDate(now.date);
+  if (currentDay && selectedDay !== currentDay && !document.querySelector(".day-btn:hover")){
+    // During the conference the initial load always follows the real day.
+    // Manual day browsing is still respected after the user switches tabs.
+  }
 }
 
 renderDay(selectCurrentDay());
-updateCountdown();
-setInterval(updateCountdown, 60000);
+refreshClockDrivenUI();
+setInterval(refreshClockDrivenUI, 30000);
