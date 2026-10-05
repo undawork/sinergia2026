@@ -714,7 +714,7 @@ function renderSocialPlan(){
 
   const rows = socialSortRows(socialFilteredRows());
   if (!rows.length){
-    list.innerHTML = '<div class="social-plan-empty">No hay publicaciones que coincidan con estos filtros.</div>';
+    list.innerHTML = '<div class="social-plan-empty">No hay publicaciones para esta jornada.</div>';
     return;
   }
 
