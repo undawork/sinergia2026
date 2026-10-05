@@ -72,6 +72,9 @@ const schedule = {
 
 const EVENT_TZ = "America/Argentina/Cordoba";
 const TEAM_DATA_URL = "/data/team.json";
+const PUBLISHING_DATA_URL = "/data/publishing.json";
+let publishingRows = [];
+let latestTeamMembers = [];
 const TEAM_REFRESH_MS = 10000;
 let lastTeamPayloadHash = "";
 let teamRefreshTimer = null;
@@ -193,6 +196,9 @@ async function refreshTeamData({manual = false} = {}){
       }
     }
 
+    latestTeamMembers = members;
+    if (publishingRows.length) renderSocialPlan();
+
     const areas = new Set(members.map(member => member.area).filter(Boolean));
     if (count) count.textContent = `${members.length} integrantes · ${areas.size} áreas`;
     if (syncTime){
@@ -220,6 +226,147 @@ document.querySelector("#teamRefreshBtn")?.addEventListener("click", () => refre
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden) refreshTeamData();
 });
+
+
+const agendaTabButtons = [...document.querySelectorAll("[data-agenda-tab]")];
+const agendaPanels = [...document.querySelectorAll("[data-agenda-panel]")];
+
+function setAgendaTab(tab){
+  agendaTabButtons.forEach(btn => btn.classList.toggle("is-active", btn.dataset.agendaTab === tab));
+  agendaPanels.forEach(panel => panel.classList.toggle("is-active", panel.dataset.agendaPanel === tab));
+  if (tab === "social" && !publishingRows.length) refreshPublishingData();
+}
+
+agendaTabButtons.forEach(btn => btn.addEventListener("click", () => setAgendaTab(btn.dataset.agendaTab)));
+
+function escapeHtml(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;");
+}
+
+function socialOwnerName(ownerId){
+  const member = latestTeamMembers.find(m => m.member_id === ownerId);
+  if (member) return member.name;
+  if (!ownerId || String(ownerId).startsWith("TEAM-DEMO")) return "Por asignar";
+  return ownerId;
+}
+
+function socialDateLabel(date){
+  if (!date) return "Sin fecha";
+  const labels = {
+    "2026-10-08":"Jueves 8",
+    "2026-10-09":"Viernes 9",
+    "2026-10-10":"Sábado 10"
+  };
+  return labels[date] || date;
+}
+
+function fillSocialFilter(id, rows, key, fallback){
+  const select = document.querySelector(id);
+  if (!select) return;
+  const current = select.value;
+  const values = [...new Set(rows.map(row => row[key]).filter(Boolean))].sort();
+  select.innerHTML = `<option value="all">${fallback}</option>${values.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("")}`;
+  if ([...select.options].some(o => o.value === current)) select.value = current;
+}
+
+function socialFilteredRows(){
+  const day = document.querySelector("#socialDayFilter")?.value || "all";
+  const platform = document.querySelector("#socialPlatformFilter")?.value || "all";
+  const format = document.querySelector("#socialFormatFilter")?.value || "all";
+  const status = document.querySelector("#socialStatusFilter")?.value || "all";
+
+  return publishingRows.filter(row => {
+    const dayOk = day === "all"
+      || (day === "unscheduled" ? !row.planned_date : row.planned_date === day);
+    return dayOk
+      && (platform === "all" || row.platform === platform)
+      && (format === "all" || row.format === format)
+      && (status === "all" || row.status === status);
+  });
+}
+
+function renderSocialPlan(){
+  const list = document.querySelector("#socialPlanList");
+  if (!list) return;
+
+  fillSocialFilter("#socialPlatformFilter", publishingRows, "platform", "Todas");
+  fillSocialFilter("#socialFormatFilter", publishingRows, "format", "Todos");
+  fillSocialFilter("#socialStatusFilter", publishingRows, "status", "Todos");
+
+  const total = publishingRows.length;
+  const ready = publishingRows.filter(r => ["listo","programado"].includes(String(r.status).toLowerCase())).length;
+  const published = publishingRows.filter(r => String(r.status).toLowerCase() === "publicado").length;
+  const pending = publishingRows.filter(r => ["placeholder","borrador",""].includes(String(r.status || "").toLowerCase())).length;
+  document.querySelector("#socialKpiTotal").textContent = total;
+  document.querySelector("#socialKpiReady").textContent = ready;
+  document.querySelector("#socialKpiPublished").textContent = published;
+  document.querySelector("#socialKpiPending").textContent = pending;
+  document.querySelector("#socialPlanCount").textContent = `${total} ${total === 1 ? "pieza" : "piezas"}`;
+
+  const rows = socialFilteredRows();
+  if (!rows.length){
+    list.innerHTML = '<div class="social-plan-empty">No hay publicaciones que coincidan con estos filtros.</div>';
+    return;
+  }
+
+  list.innerHTML = rows.map(row => {
+    const status = String(row.status || "pendiente").toLowerCase();
+    const time = row.planned_time || "Horario pendiente";
+    const note = row.notes || (row.copy_text && !String(row.copy_text).includes("PLACEHOLDER") ? row.copy_text : "Contenido pendiente de completar.");
+    return `
+      <article class="social-plan-item ${row.is_placeholder ? "is-placeholder" : ""}">
+        <div class="social-plan-when">
+          <strong>${escapeHtml(socialDateLabel(row.planned_date))}</strong>
+          <span>${escapeHtml(time)}</span>
+        </div>
+        <div class="social-plan-main">
+          <h4>${escapeHtml(row.title || "Pieza sin título")}</h4>
+          <p>${escapeHtml(note)}</p>
+          <div class="social-plan-tags">
+            ${row.platform ? `<span>${escapeHtml(row.platform)}</span>` : ""}
+            ${row.format ? `<span>${escapeHtml(row.format)}</span>` : ""}
+            ${row.schedule_id ? `<span>${escapeHtml(row.schedule_id)}</span>` : ""}
+          </div>
+        </div>
+        <div class="social-plan-owner">
+          <strong>${escapeHtml(socialOwnerName(row.owner_id))}</strong>
+          <span>Responsable</span>
+        </div>
+        <div class="social-plan-status">
+          <span class="social-status-chip" data-status="${escapeHtml(status)}">${escapeHtml(status)}</span>
+        </div>
+      </article>`;
+  }).join("");
+}
+
+async function refreshPublishingData(){
+  const button = document.querySelector("#publishingRefreshBtn");
+  button?.classList.add("is-loading");
+  if (button) button.disabled = true;
+  try{
+    const response = await fetch(`${PUBLISHING_DATA_URL}?t=${Date.now()}`, {cache:"no-store"});
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const payload = await response.json();
+    publishingRows = Array.isArray(payload.items) ? payload.items : [];
+    renderSocialPlan();
+  }catch(error){
+    console.warn("No se pudo actualizar PUBLISHING:", error);
+    const list = document.querySelector("#socialPlanList");
+    if (list) list.innerHTML = '<div class="social-plan-empty">No se pudo cargar el Social Media Plan.</div>';
+  }finally{
+    button?.classList.remove("is-loading");
+    if (button) button.disabled = false;
+  }
+}
+
+["#socialDayFilter","#socialPlatformFilter","#socialFormatFilter","#socialStatusFilter"].forEach(selector => {
+  document.querySelector(selector)?.addEventListener("change", renderSocialPlan);
+});
+document.querySelector("#publishingRefreshBtn")?.addEventListener("click", refreshPublishingData);
 
 const navButtons = [...document.querySelectorAll("[data-view]")];
 const views = [...document.querySelectorAll(".view")];
@@ -560,3 +707,4 @@ renderDay(selectCurrentDay());
 refreshClockDrivenUI();
 setInterval(refreshClockDrivenUI, 30000);
 startTeamAutoRefresh();
+refreshPublishingData();
