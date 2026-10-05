@@ -11,7 +11,7 @@
   <title>SINERGIA 2026 · Photo Team</title>
   <link rel="stylesheet" href="/styles.css?v=20261005-photo-assign1">
   <link rel="stylesheet" href="/ux-mobile.css?v=20261005-ux1">
-  <link rel="stylesheet" href="/social-plan-v2.css?v=20261005-agenda4">
+  <link rel="stylesheet" href="/social-plan-v2.css?v=20261005-shotops1">
 </head>
 <body data-day="1"><div class="site-shell">
     <header class="topbar">
@@ -133,6 +133,11 @@
             <strong>Cronograma</strong>
             <small>Qué está pasando</small>
           </button>
+          <button class="agenda-mode-btn" type="button" data-agenda-tab="shotlist">
+            <span>03</span>
+            <strong>Shot List</strong>
+            <small>Qué debemos recolectar</small>
+          </button>
         </div>
 
         <div class="agenda-panel" data-agenda-panel="schedule">
@@ -207,6 +212,45 @@
 
               <div class="social-timeline-list" id="socialPlanList">
                 <div class="social-plan-empty">Cargando Social Media Plan…</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="agenda-panel" data-agenda-panel="shotlist">
+          <div class="day-switcher shot-day-switcher" aria-label="Seleccionar jornada de Shot List">
+            <button class="day-btn shot-day-btn is-active" type="button" data-shot-day="1">Jueves 8 <small>Distinción</small></button>
+            <button class="day-btn shot-day-btn" type="button" data-shot-day="2">Viernes 9 <small>Encuentro</small></button>
+            <button class="day-btn shot-day-btn" type="button" data-shot-day="3">Sábado 10 <small>Integración</small></button>
+          </div>
+
+          <div class="schedule-layout shot-schedule-layout">
+            <aside class="day-overview shot-day-overview">
+              <div class="day-number" id="shotDayNumber">01</div>
+              <div>
+                <div class="day-name" id="shotDayName">Jueves 8</div>
+                <div class="day-concept" id="shotDayConcept">Distinción</div>
+              </div>
+              <div class="day-palette" id="shotDayPalette"></div>
+
+              <div class="shot-day-summary">
+                <span class="shot-summary-label">Operación</span>
+                <strong id="shotBlockCount">— bloques</strong>
+                <small>Captura + handoff + edición</small>
+              </div>
+            </aside>
+
+            <div class="shot-ops">
+              <div class="shot-editing-bar">
+                <div>
+                  <span class="livebar-kicker">Rotación de edición</span>
+                  <strong id="shotEditingHeadline">Turnos de 3–4 horas</strong>
+                </div>
+                <div class="shot-editing-shifts" id="shotEditingShifts"></div>
+              </div>
+
+              <div class="shot-ops-list" id="shotOpsList">
+                <div class="social-plan-empty">Cargando Shot List operativo…</div>
               </div>
             </div>
           </div>
@@ -767,7 +811,7 @@
   </div>
   <div class="save-toast" id="saveToast" role="status" aria-live="polite"></div>
 
-  <script src="/app.js?v=20261005-agenda4"></script>
+  <script src="/app.js?v=20261005-shotops1"></script>
   <script type="text/javascript" async defer src="https://assets.pinterest.com/js/pinit.js"></script>
 </body>
 </html>
