@@ -9,7 +9,7 @@
   <link rel="shortcut icon" href="/brand/logos/sinergia-site-icon.svg">
   <meta name="description" content="SINERGIA 2026 · Photo Team Command Center">
   <title>SINERGIA 2026 · Photo Team</title>
-  <link rel="stylesheet" href="/styles.css?v=20261005-coverage2">
+  <link rel="stylesheet" href="/styles.css?v=20261005-shotlist1">
 </head>
 <body data-day="1"><div class="site-shell">
     <header class="topbar">
@@ -289,127 +289,139 @@
           <p>En las categorías principales, buscar variedad de escala y orientación. No depender de una sola foto “buena”: construir secuencias que después permitan contar la historia completa.</p>
         </div>
 
-        <div class="coverage-shot-grid">
-          <article class="coverage-shot-card is-core">
+        <div class="shot-list-filters" aria-label="Filtrar shot list">
+          <label>
+            <span>Categoría</span>
+            <select id="shotCategoryFilter">
+              <option value="all">Todas · CORE primero</option>
+              <option value="core">CORE</option>
+              <option value="other">OTROS</option>
+            </select>
+          </label>
+          <div class="shot-filter-summary" id="shotFilterSummary">CORE primero · luego OTROS</div>
+        </div>
+
+        <div class="coverage-shot-grid" id="coverageShotGrid">
+          <article class="coverage-shot-card is-core" data-shot-group="core">
             <div class="shot-card-head"><span>01</span><small>Core</small></div>
             <h3>Músicos</h3>
             <p>Cantantes, banda, instrumentos, interacción entre músicos, planos individuales y conjunto completo.</p>
             <div class="shot-tags"><span>stage</span><span>instrumentos</span><span>worship</span></div>
           </article>
 
-          <article class="coverage-shot-card is-core">
+          <article class="coverage-shot-card is-core" data-shot-group="core">
             <div class="shot-card-head"><span>02</span><small>Core</small></div>
             <h3>Predicadores</h3>
             <p>Frontales, perfiles, expresiones, gestos, manos, interacción con la audiencia y contexto de escenario.</p>
             <div class="shot-tags"><span>speaker</span><span>gestos</span><span>pantallas</span></div>
           </article>
 
-          <article class="coverage-shot-card is-core">
+          <article class="coverage-shot-card is-core" data-shot-group="core">
             <div class="shot-card-head"><span>03</span><small>Core</small></div>
             <h3>People Worship</h3>
             <p>Manos levantadas, ojos cerrados, lágrimas, alegría, canto y momentos genuinos de conexión con Dios.</p>
             <div class="shot-tags"><span>reacciones</span><span>manos</span><span>emoción</span></div>
           </article>
 
-          <article class="coverage-shot-card is-core">
+          <article class="coverage-shot-card is-core" data-shot-group="core">
             <div class="shot-card-head"><span>04</span><small>Core</small></div>
             <h3>Oración + Ministración</h3>
             <p>Altar, acompañamiento, imposición de manos y momentos íntimos. Fotografiar con criterio, distancia y respeto.</p>
             <div class="shot-tags"><span>oración</span><span>altar</span><span>cuidado</span></div>
           </article>
 
-          <article class="coverage-shot-card is-core">
+          <article class="coverage-shot-card is-core" data-shot-group="core">
             <div class="shot-card-head"><span>05</span><small>Core</small></div>
             <h3>Auditorio + Escala</h3>
             <p>Planos abiertos desde distintos puntos: escenario, multitud, luces, pantallas y dimensión completa del encuentro.</p>
             <div class="shot-tags"><span>wides</span><span>crowd</span><span>escala</span></div>
           </article>
 
-          <article class="coverage-shot-card">
+          <article class="coverage-shot-card" data-shot-group="other">
             <div class="shot-card-head"><span>06</span><small>People</small></div>
             <h3>Encuentro humano</h3>
             <p>Abrazos, conversaciones, risas, nuevas amistades, reencuentros y pequeños grupos compartiendo.</p>
             <div class="shot-tags"><span>comunidad</span><span>gestos</span><span>conexión</span></div>
           </article>
 
-          <article class="coverage-shot-card">
+          <article class="coverage-shot-card" data-shot-group="other">
             <div class="shot-card-head"><span>07</span><small>People</small></div>
             <h3>Fotos grupales</h3>
             <p>Amigos, hogares, equipos, ciudades y grupos espontáneos. Buscar algunas fotos limpias y otras más naturales.</p>
             <div class="shot-tags"><span>grupos</span><span>equipos</span><span>exteriores</span></div>
           </article>
 
-          <article class="coverage-shot-card">
+          <article class="coverage-shot-card" data-shot-group="other">
             <div class="shot-card-head"><span>08</span><small>Experience</small></div>
             <h3>Lunch Time</h3>
             <p>Mesas, comida, filas, conversaciones y descanso. Priorizar escenas reales que muestren comunidad fuera del auditorio.</p>
             <div class="shot-tags"><span>comida</span><span>mesas</span><span>social</span></div>
           </article>
 
-          <article class="coverage-shot-card">
+          <article class="coverage-shot-card" data-shot-group="other">
             <div class="shot-card-head"><span>09</span><small>Prayer</small></div>
             <h3>CDO</h3>
             <p>Casa de oración: intercesión, quietud, grupos, personas orando y detalles que transmitan la atmósfera del espacio.</p>
             <div class="shot-tags"><span>oración</span><span>silencio</span><span>atmósfera</span></div>
           </article>
 
-          <article class="coverage-shot-card">
+          <article class="coverage-shot-card" data-shot-group="other">
             <div class="shot-card-head"><span>10</span><small>Experience</small></div>
             <h3>Stands + Espacio TTL</h3>
             <p>Marcas, stands de la iglesia, activaciones, objetos, interacción de asistentes y planos generales del espacio.</p>
             <div class="shot-tags"><span>stands</span><span>brands</span><span>interacción</span></div>
           </article>
 
-          <article class="coverage-shot-card is-core">
+          <article class="coverage-shot-card is-core" data-shot-group="core">
             <div class="shot-card-head"><span>11</span><small>Core</small></div>
             <h3>Servidores</h3>
             <p>Hospitalidad, acreditación, oración, producción, orden, asistencia y trabajo invisible que sostiene el evento.</p>
             <div class="shot-tags"><span>voluntarios</span><span>servicio</span><span>equipo</span></div>
           </article>
 
-          <article class="coverage-shot-card">
+          <article class="coverage-shot-card" data-shot-group="other">
             <div class="shot-card-head"><span>12</span><small>Arrival</small></div>
             <h3>Acreditación + Llegadas</h3>
             <p>Primeros ingresos, credenciales, pulseras, filas, saludos y expectativa previa al comienzo.</p>
             <div class="shot-tags"><span>check-in</span><span>llegadas</span><span>expectativa</span></div>
           </article>
 
-          <article class="coverage-shot-card">
+          <article class="coverage-shot-card" data-shot-group="other">
             <div class="shot-card-head"><span>13</span><small>Brand</small></div>
             <h3>Decoración + Branding</h3>
             <p>Señalética, gráficas, pantallas, ambientación, merch, objetos y detalles que hagan reconocible a SINERGIA.</p>
             <div class="shot-tags"><span>identidad</span><span>señalética</span><span>detalles</span></div>
           </article>
 
-          <article class="coverage-shot-card">
+          <article class="coverage-shot-card" data-shot-group="other">
             <div class="shot-card-head"><span>14</span><small>Editorial</small></div>
             <h3>Portraits</h3>
             <p>Predicadores, músicos, equipo, servidores y asistentes. Hacer variedad vertical y horizontal cuando sea posible.</p>
             <div class="shot-tags"><span>retratos</span><span>vertical</span><span>horizontal</span></div>
           </article>
 
-          <article class="coverage-shot-card">
+          <article class="coverage-shot-card" data-shot-group="other">
             <div class="shot-card-head"><span>15</span><small>Creative</small></div>
             <h3>Artísticas + Abstractas</h3>
             <p>Blur, reflejos, siluetas, flare, capas, movimiento, color y composiciones que aporten lenguaje editorial.</p>
             <div class="shot-tags"><span>blur</span><span>reflejos</span><span>movimiento</span></div>
           </article>
 
-          <article class="coverage-shot-card">
+          <article class="coverage-shot-card" data-shot-group="other">
             <div class="shot-card-head"><span>16</span><small>Behind scenes</small></div>
             <h3>Backstage + Producción</h3>
             <p>Cámaras, audio, luces, switcher, preparación de speakers, músicos y equipo trabajando detrás de escena.</p>
             <div class="shot-tags"><span>bts</span><span>producción</span><span>crew</span></div>
           </article>
 
-          <article class="coverage-shot-card">
+          <article class="coverage-shot-card" data-shot-group="other">
             <div class="shot-card-head"><span>17</span><small>Details</small></div>
             <h3>Objetos + Detalles</h3>
             <p>Biblias, cuadernos, credenciales, manos, vasos, instrumentos, texturas y pequeños elementos que conectan escenas.</p>
             <div class="shot-tags"><span>objetos</span><span>close-up</span><span>storytelling</span></div>
           </article>
 
-          <article class="coverage-shot-card">
+          <article class="coverage-shot-card" data-shot-group="other">
             <div class="shot-card-head"><span>18</span><small>Content</small></div>
             <h3>Spot entrevistas</h3>
             <p>Retratos antes y después, entrevistador + invitado, setup, backstage y momentos naturales entre respuestas.</p>
@@ -652,7 +664,7 @@
   </div>
   <div class="save-toast" id="saveToast" role="status" aria-live="polite"></div>
 
-  <script src="/app.js"></script>
+  <script src="/app.js?v=20261005-shotlist1"></script>
   <script type="text/javascript" async defer src="https://assets.pinterest.com/js/pinit.js"></script>
 </body>
 </html>
