@@ -614,3 +614,77 @@ footer{
   }
   .timeline-progress{left:20px;right:10px}
 }
+
+
+/* Data refresh + team sync */
+.header-tools{display:flex;align-items:center;gap:9px}
+.refresh-data-btn,.team-refresh-btn{
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--ink);
+  border-radius:999px;
+  cursor:pointer;
+  transition:.2s ease;
+}
+.refresh-data-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:8px 11px;
+  font-size:10px;
+}
+.team-refresh-btn{
+  padding:7px 10px;
+  font-size:10px;
+}
+.refresh-data-btn:hover,.team-refresh-btn:hover{transform:translateY(-1px);border-color:var(--line-strong)}
+.refresh-data-btn:disabled,.team-refresh-btn:disabled{cursor:wait;opacity:.65}
+.refresh-icon{font-size:14px;line-height:1;display:inline-block}
+.is-loading .refresh-icon{animation:refreshSpin .8s linear infinite}
+@keyframes refreshSpin{to{transform:rotate(360deg)}}
+.header-status[data-state="ok"] i{background:#37a66a;box-shadow:0 0 12px rgba(55,166,106,.45)}
+.header-status[data-state="loading"] i{background:var(--day-a)}
+.header-status[data-state="error"] i{background:#bf4d42}
+
+.team-syncbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  padding:18px 0 6px;
+  border-bottom:1px solid var(--line);
+}
+.team-syncbar > div:first-child{display:flex;align-items:baseline;gap:10px}
+.team-sync-label{
+  font-size:9px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted)
+}
+.team-syncbar strong{
+  font-size:13px;
+  font-weight:500;
+  letter-spacing:-.02em
+}
+.team-sync-meta{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:var(--muted);
+  font-size:10px
+}
+.team-card.is-lead{
+  border-color:color-mix(in srgb,var(--day-a) 24%,var(--line));
+  background:linear-gradient(145deg,#fff,color-mix(in srgb,var(--day-soft) 22%,#fff))
+}
+.team-card.is-lead .team-avatar{
+  box-shadow:0 0 0 6px color-mix(in srgb,var(--day-a) 8%,transparent)
+}
+
+@media(max-width:760px){
+  .refresh-data-btn span:last-child{display:none}
+  .refresh-data-btn{width:34px;height:34px;padding:0;justify-content:center}
+  .header-tools{gap:6px}
+  .team-syncbar{align-items:flex-start}
+  .team-sync-meta{flex-direction:column;align-items:flex-end;gap:6px;text-align:right}
+}
