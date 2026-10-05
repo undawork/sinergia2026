@@ -566,6 +566,54 @@ document.querySelector("#socialPlanList")?.addEventListener("change", event => {
 });
 document.querySelector("#publishingRefreshBtn")?.addEventListener("click", refreshPublishingData);
 
+function initShotListFilter(){
+  const grid = document.querySelector("#coverageShotGrid");
+  const filter = document.querySelector("#shotCategoryFilter");
+  const summary = document.querySelector("#shotFilterSummary");
+  if (!grid || !filter) return;
+
+  const cards = [...grid.querySelectorAll(".coverage-shot-card")];
+
+  cards
+    .sort((a,b) => {
+      const groupA = a.dataset.shotGroup === "core" ? 0 : 1;
+      const groupB = b.dataset.shotGroup === "core" ? 0 : 1;
+      if (groupA !== groupB) return groupA - groupB;
+      const numA = Number(a.querySelector(".shot-card-head > span")?.textContent || 999);
+      const numB = Number(b.querySelector(".shot-card-head > span")?.textContent || 999);
+      return numA - numB;
+    })
+    .forEach(card => grid.appendChild(card));
+
+  const render = () => {
+    const value = filter.value;
+    let visible = 0;
+    cards.forEach(card => {
+      const group = card.dataset.shotGroup || "other";
+      const show = value === "all" || value === group;
+      card.hidden = !show;
+      if (show) visible += 1;
+    });
+
+    const coreCount = cards.filter(card => card.dataset.shotGroup === "core").length;
+    const otherCount = cards.length - coreCount;
+    if (summary){
+      summary.textContent = value === "core"
+        ? `${coreCount} CORE`
+        : value === "other"
+          ? `${otherCount} OTROS`
+          : `${coreCount} CORE · ${otherCount} OTROS · CORE primero`;
+    }
+    grid.dataset.filter = value;
+    grid.setAttribute("aria-label", `Shot list · ${visible} elementos visibles`);
+  };
+
+  filter.addEventListener("change", render);
+  render();
+}
+
+initShotListFilter();
+
 const navButtons = [...document.querySelectorAll("[data-view]")];
 const views = [...document.querySelectorAll(".view")];
 let selectedDay = 1;
