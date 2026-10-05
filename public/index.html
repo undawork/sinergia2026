@@ -34,6 +34,10 @@
           <span class="refresh-icon" aria-hidden="true">↻</span>
           <span>Actualizar</span>
         </button>
+        <button class="edit-mode-btn" id="editModeBtn" type="button" aria-label="Ingresar al modo edición">
+          <span class="edit-mode-icon" aria-hidden="true">✎</span>
+          <span id="editModeLabel">Editar</span>
+        </button>
       </div>
     </header>
 
@@ -428,6 +432,27 @@
     <button data-view="resources">Recursos</button>
     <button data-view="team">Equipo</button>
   </nav>
+
+  <div class="auth-modal" id="authModal" hidden aria-hidden="true">
+    <button class="auth-backdrop" type="button" data-auth-close aria-label="Cerrar acceso"></button>
+    <section class="auth-card" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <div class="auth-card-head">
+        <div>
+          <span class="eyebrow">Acceso restringido</span>
+          <h2 id="authTitle">Editar estados</h2>
+        </div>
+        <button class="auth-close-btn" type="button" data-auth-close aria-label="Cerrar">×</button>
+      </div>
+      <p>Inicia sesión para actualizar el estado de las piezas del Social Media Plan.</p>
+      <form class="auth-form" id="authForm">
+        <label><span>Usuario</span><input id="authUsername" name="username" type="text" value="sinergia" autocomplete="username" autocapitalize="none" spellcheck="false" required></label>
+        <label><span>Contraseña</span><input id="authPassword" name="password" type="password" autocomplete="current-password" required></label>
+        <div class="auth-error" id="authError" role="alert" aria-live="polite"></div>
+        <button class="auth-submit-btn" id="authSubmitBtn" type="submit">Ingresar y editar</button>
+      </form>
+    </section>
+  </div>
+  <div class="save-toast" id="saveToast" role="status" aria-live="polite"></div>
 
   <script src="/app.js"></script>
   <script type="text/javascript" async defer src="https://assets.pinterest.com/js/pinit.js"></script>
