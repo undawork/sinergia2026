@@ -47,7 +47,13 @@
         <button class="nav-link" data-view="team">Equipo</button>
       </nav>
 
-      <div class="header-status"><i></i><span>Template operativo</span></div>
+      <div class="header-tools">
+        <div class="header-status" id="syncStatus"><i></i><span>Datos locales</span></div>
+        <button class="refresh-data-btn" id="refreshDataBtn" type="button" aria-label="Actualizar datos">
+          <span class="refresh-icon" aria-hidden="true">↻</span>
+          <span>Actualizar</span>
+        </button>
+      </div>
     </header>
 
     <main>
@@ -352,31 +358,27 @@
             <span class="eyebrow">Quién hace qué</span>
             <h2>Equipo</h2>
           </div>
-          <p>Directorio operativo sin datos sensibles. Cuando definamos el equipo, acá quedarán roles y responsabilidades.</p>
+          <p>Equipo de Fotografía sincronizado desde la fuente de datos del proyecto. La web vuelve a consultar los datos cada 10 segundos.</p>
           <svg class="section-brand" viewBox="0 0 463 325"><use href="#sinergia-symbol" fill="currentColor"/></svg>
         </header>
 
-        <div class="team-grid">
-          <article class="team-card">
-            <div class="team-avatar">JU</div>
-            <h3>Jesús / Rafa</h3>
-            <div class="team-role">Dirección de fotografía</div>
-            <p>Coordinación general, cobertura y criterio visual.</p>
-            <div class="contact">Contacto interno · pendiente</div>
-          </article>
+        <div class="team-syncbar">
+          <div>
+            <span class="team-sync-label">Fotografía</span>
+            <strong id="teamCount">— integrantes</strong>
+          </div>
+          <div class="team-sync-meta">
+            <span id="teamSyncTime">Cargando datos…</span>
+            <button type="button" class="team-refresh-btn" id="teamRefreshBtn">Actualizar ahora</button>
+          </div>
+        </div>
+
+        <div class="team-grid" id="teamGrid" aria-live="polite">
           <article class="team-card placeholder">
-            <div class="team-avatar">01</div>
-            <h3>Fotógrafo/a 01</h3>
-            <div class="team-role">Rol por definir</div>
-            <p>Asignación, zonas y turnos pendientes.</p>
-            <div class="contact">Datos pendientes</div>
-          </article>
-          <article class="team-card placeholder">
-            <div class="team-avatar">02</div>
-            <h3>Fotógrafo/a 02</h3>
-            <div class="team-role">Rol por definir</div>
-            <p>Asignación, zonas y turnos pendientes.</p>
-            <div class="contact">Datos pendientes</div>
+            <div class="team-avatar">…</div>
+            <h3>Cargando equipo</h3>
+            <div class="team-role">Sincronizando</div>
+            <p>Consultando la fuente de datos.</p>
           </article>
         </div>
       </section>
