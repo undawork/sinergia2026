@@ -300,7 +300,7 @@ function renderSocialPlan(){
   const total = publishingRows.length;
   const ready = publishingRows.filter(r => ["listo","programado"].includes(String(r.status).toLowerCase())).length;
   const published = publishingRows.filter(r => String(r.status).toLowerCase() === "publicado").length;
-  const pending = publishingRows.filter(r => ["placeholder","borrador",""].includes(String(r.status || "").toLowerCase())).length;
+  const pending = publishingRows.filter(r => ["placeholder","borrador","sin comenzar",""].includes(String(r.status || "").toLowerCase())).length;
   document.querySelector("#socialKpiTotal").textContent = total;
   document.querySelector("#socialKpiReady").textContent = ready;
   document.querySelector("#socialKpiPublished").textContent = published;
@@ -315,17 +315,19 @@ function renderSocialPlan(){
 
   list.innerHTML = rows.map(row => {
     const status = String(row.status || "pendiente").toLowerCase();
-    const time = row.planned_time || "Horario pendiente";
-    const note = row.notes || (row.copy_text && !String(row.copy_text).includes("PLACEHOLDER") ? row.copy_text : "Contenido pendiente de completar.");
+    const time = row.deadline_time || row.planned_time || "Hora límite pendiente";
+    const rawNote = row.notes || "";
+    const isReferenceUrl = /^https?:\/\//i.test(rawNote);
+    const note = isReferenceUrl ? "Referencia visual disponible" : (rawNote || (row.copy_text ? row.copy_text : "Sin notas adicionales."));
     return `
       <article class="social-plan-item ${row.is_placeholder ? "is-placeholder" : ""}">
         <div class="social-plan-when">
           <strong>${escapeHtml(socialDateLabel(row.planned_date))}</strong>
-          <span>${escapeHtml(time)}</span>
+          <span>Hora límite · ${escapeHtml(time)}</span>
         </div>
         <div class="social-plan-main">
           <h4>${escapeHtml(row.title || "Pieza sin título")}</h4>
-          <p>${escapeHtml(note)}</p>
+          <p>${escapeHtml(note)}${isReferenceUrl ? ` · <a href="${escapeHtml(rawNote)}" target="_blank" rel="noopener noreferrer">Ver referencia</a>` : ""}</p>
           <div class="social-plan-tags">
             ${row.platform ? `<span>${escapeHtml(row.platform)}</span>` : ""}
             ${row.format ? `<span>${escapeHtml(row.format)}</span>` : ""}
